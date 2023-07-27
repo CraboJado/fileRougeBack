@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/back/back.iml" filepath="$PROJECT_DIR$/back/back.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/redWireProjectBack.iml" filepath="$PROJECT_DIR$/.idea/redWireProjectBack.iml" />
     </modules>
   </component>
