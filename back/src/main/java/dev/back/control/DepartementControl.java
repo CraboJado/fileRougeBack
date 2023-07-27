@@ -14,6 +14,8 @@ public class DepartementControl {
 
     DepartementService departementService;
 
+
+
     public DepartementControl(DepartementService departementService) {
         this.departementService = departementService;
     }
@@ -24,7 +26,7 @@ public class DepartementControl {
     }
 
     @PostMapping
-    public void addDepartement(DepartementDTO departementDTO){
+    public void addDepartement(@RequestBody DepartementDTO departementDTO){
         Departement departement= new Departement(departementDTO.getName());
         departementService.addDepartement(departement);
     }

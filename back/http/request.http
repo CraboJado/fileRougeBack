@@ -1,0 +1,28 @@
+POST localhost:8080/employe
+Content-Type: application/json
+
+
+{
+    "firstName" : "u1",
+    "lastName" : "pass1",
+    "passWord" : "pass1",
+    "soldeConge" : 10,
+    "soldeRtt" : 10,
+    "email" : "10",
+    "role" : "role",
+    "departement" : {
+      "role": ""
+    },
+    "manager" : {
+
+    }
+}
+
+###
+POST localhost:8080/departement
+Content-Type: application/json
+
+{
+  "name" : "departementTest"
+}
+

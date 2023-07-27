@@ -24,7 +24,7 @@ public class AbsenceControl {
     }
 
     @PostMapping
-    public void addAbsence(AbsenceDTO absenceDTO){
+    public void addAbsence(@RequestBody AbsenceDTO absenceDTO){
         Absence absence=new Absence(absenceDTO.getDateDebut(),absenceDTO.getDateFin(),absenceDTO.getStatut(),absenceDTO.getTypeAbsence(),absenceDTO.getEmploye());
         absenceService.addAbsence(absence);
     }
