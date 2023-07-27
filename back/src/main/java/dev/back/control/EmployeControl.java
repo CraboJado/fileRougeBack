@@ -3,6 +3,7 @@ package dev.back.control;
 import dev.back.DTO.EmployeDTO;
 import dev.back.entite.Employe;
 import dev.back.service.EmployeService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 public class EmployeControl {
 
     EmployeService employeService;
+    private PasswordEncoder passwordEncoder;
 
     public EmployeControl(EmployeService employeService) {
         this.employeService = employeService;
@@ -25,8 +27,10 @@ public class EmployeControl {
 
 
     @PostMapping
-    public void addEmploye(EmployeDTO employeDTO){
-        Employe employe=new Employe(employeDTO.getFirstName(), employeDTO.getLastName(), employeDTO.getPassWord(), employeDTO.getSoldeConge(), employeDTO.getSoldeRtt(), employeDTO.getEmail(), employeDTO.getRole(), employeDTO.getDepartement(), employeDTO.getManager());
+    public void addEmploye(@RequestBody EmployeDTO employeDTO){
+        //TODO hasher MOT DE PASS
+        String pswEncoded = passwordEncoder.encode(employeDTO.getPassWord());
+        Employe employe=new Employe(employeDTO.getFirstName(), employeDTO.getLastName(), pswEncoded, employeDTO.getSoldeConge(), employeDTO.getSoldeRtt(), employeDTO.getEmail(), employeDTO.getRole(), employeDTO.getDepartement(), employeDTO.getManager());
         employeService.addEmploye(employe);
     }
 

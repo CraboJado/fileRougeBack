@@ -11,8 +11,8 @@ import java.util.List;
 
 @Service
 public class DepartementService {
-    @Autowired
 
+    @Autowired
     DepartementRepo departementRepo;
 
     public List<Departement> listDepartements() {
