@@ -1,0 +1,9 @@
+INSERT INTO Departement (name) VALUES
+('Ressources Humaines'),
+('Finances'),
+('Logistique'),
+('Ventes'),
+('Recherche et Développement'),
+('Production'),
+('Marketing'),
+('Qualité');
