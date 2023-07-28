@@ -43,11 +43,10 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
                         String email = body.getSubject();
 //                        List<String> roles = body.get("roles", List.class);
-                        String role = body.get("roles", String.class);
+                        List<String> roles = body.get("roles", ArrayList.class);
 //                        System.out.println("roles=====================================ADMIN="+ role);
                         //                        {sub=abc@hotmail.fr, roles=ADMIN, exp=1690576791}
-                        List<String> roles = new ArrayList<>();
-                        roles.add(role);
+
 
                         List<SimpleGrantedAuthority> authorities = roles
                                 .stream()

@@ -17,11 +17,11 @@ Content-Type: application/json
 {
     "firstName" : "u13MANAGER",
     "lastName" : "pass13",
-    "passWord" : "pass13123456",
+    "password" : "pass13123456",
     "soldeConge" : 10,
     "soldeRtt" : 10,
     "email" : "pass13123456@hotmail.fr",
-    "role" : "MANAGER",
+    "role" : 0,
     "departementId" : 1,
     "managerId": 5
 
@@ -41,11 +41,11 @@ POST localhost:8080/absence
 Content-Type: application/json
 
 {
-  "dateDebut" : "28/07/2023",
-  "dateFin" : "30/07/2023",
+  "dateDebut" : "2023-07-28",
+  "dateFin" : "2023-08-21",
   "statut" : "INITIALE",
   "typeAbsence" : "RTT",
-  "employeId" : 7
+  "employeId" : 1
 
 }
 

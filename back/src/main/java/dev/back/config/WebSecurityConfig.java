@@ -31,12 +31,12 @@ public class WebSecurityConfig {
 //                        .anyRequest().permitAll()
 //                                .requestMatchers(antMatcher("/employe")).permitAll()
                                 // route pour ajouter employe, ici ça passe meme non authenticated
-//                                .requestMatchers(antMatcher(HttpMethod.POST,"/employe")).permitAll()
+                                .requestMatchers(antMatcher(HttpMethod.POST,"/employe")).permitAll()
                                 // pour tester d'abord
-                                .requestMatchers(antMatcher(HttpMethod.POST,"/absence")).permitAll()
+                                      .requestMatchers(antMatcher(HttpMethod.POST,"/absence")).permitAll()
                                 // session = logique login
                                 .requestMatchers(antMatcher(HttpMethod.POST,"/sessions")).permitAll()
-//                                .requestMatchers(antMatcher(HttpMethod.POST,"/login")).permitAll()
+                                .requestMatchers(antMatcher(HttpMethod.POST,"/login")).permitAll()
 //                                .requestMatchers(antMatcher("/admin/**")).hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
