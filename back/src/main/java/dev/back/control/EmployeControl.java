@@ -16,8 +16,9 @@ public class EmployeControl {
     EmployeService employeService;
     private PasswordEncoder passwordEncoder;
 
-    public EmployeControl(EmployeService employeService) {
+    public EmployeControl(EmployeService employeService, PasswordEncoder passwordEncoder) {
         this.employeService = employeService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping
