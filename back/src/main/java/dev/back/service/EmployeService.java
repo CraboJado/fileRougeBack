@@ -19,6 +19,7 @@ public class EmployeService {
         return employeRepo.findAll();
     }
 
+
     public Employe getEmployeById(Integer id){
         Optional<Employe> EmployeOp = employeRepo.findById(id);
         if(EmployeOp.isPresent()) return EmployeOp.get();
@@ -26,6 +27,7 @@ public class EmployeService {
         else return null;
 
     }
+
     @Transactional
     public void addEmploye(Employe employe) {
         employeRepo.save(employe);

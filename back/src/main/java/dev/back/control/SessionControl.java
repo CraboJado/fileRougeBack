@@ -44,8 +44,10 @@ public class SessionControl {
 //        System.out.println("++++++++++++++++++++++" + matches);
 
         return this.employeRepo.findByEmail(loginDTO.getEmail())
+
                 .filter( employe ->  passwordEncoder.matches(loginDTO.getPassword(), employe.getPassWord()))
                 .map( employe -> ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,buildJWTCookie(employe)).build())
+
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 

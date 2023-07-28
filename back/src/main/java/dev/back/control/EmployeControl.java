@@ -5,8 +5,10 @@ import dev.back.entite.Departement;
 import dev.back.entite.Employe;
 import dev.back.service.DepartementService;
 import dev.back.service.EmployeService;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +21,10 @@ public class EmployeControl {
 
     EmployeService employeService;
 
+
     DepartementService departementService;
     PasswordEncoder passwordEncoder;
+
 
     public EmployeControl(EmployeService employeService, DepartementService departementService, PasswordEncoder passwordEncoder) {
         this.employeService = employeService;
@@ -35,6 +39,7 @@ public class EmployeControl {
 
     //TODO ajouter @Secure(role = "ADMIN") si c'est que ADMIN qui ajoute employe
     @PostMapping
+
     public ResponseEntity addEmploye(@RequestBody EmployeDTO employeDTO){
         //TODO hasher MOT DE PASS
         String pswEncoded = passwordEncoder.encode(employeDTO.getPassWord());
@@ -42,6 +47,7 @@ public class EmployeControl {
         Departement departement = departementService.getDepartementById(employeDTO.getDepartementId());
 
         Employe employe=new Employe(employeDTO.getFirstName(), employeDTO.getLastName(), pswEncoded, employeDTO.getSoldeConge(), employeDTO.getSoldeRtt(), employeDTO.getEmail(), employeDTO.getRole(), departement,manager);
+
         employeService.addEmploye(employe);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("employe cree");

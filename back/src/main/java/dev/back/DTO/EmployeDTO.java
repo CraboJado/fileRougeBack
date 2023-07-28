@@ -3,12 +3,11 @@ package dev.back.DTO;
 import dev.back.entite.Departement;
 import dev.back.entite.Employe;
 import dev.back.entite.Role;
-import jakarta.persistence.ManyToOne;
 
 public class EmployeDTO {
     String firstName;
     String lastName;
-    String passWord;
+    String password;
 
     int soldeConge;
     int soldeRtt;
@@ -19,9 +18,11 @@ public class EmployeDTO {
     // dans la base de donner ,c'est la valeur de enum
     Role role;
 
+
     Integer departementId;
 
     Integer managerId;
+
 
     public String getFirstName() {
         return firstName;
@@ -39,12 +40,12 @@ public class EmployeDTO {
         this.lastName = lastName;
     }
 
-    public String getPassWord() {
-        return passWord;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPassWord(String passWord) {
-        this.passWord = passWord;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public int getSoldeConge() {
@@ -79,6 +80,7 @@ public class EmployeDTO {
         this.role = role;
     }
 
+
     public Integer getDepartementId() {
         return departementId;
     }
@@ -92,6 +94,7 @@ public class EmployeDTO {
     }
 
     public void setManagerId(Integer managerId) {
+
         this.managerId = managerId;
     }
 }

@@ -21,6 +21,7 @@ public class DepartementService {
         return departementRepo.findAll();
     }
 
+
     public Departement getDepartementById(Integer id){
         Optional<Departement> dptOp = departementRepo.findById(id);
         if(dptOp.isPresent()) return dptOp.get();
@@ -28,6 +29,7 @@ public class DepartementService {
         else return null;
 
     }
+
 
 
     @Transactional
