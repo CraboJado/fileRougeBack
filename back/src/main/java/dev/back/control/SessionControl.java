@@ -37,7 +37,7 @@ public class SessionControl {
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody LoginDTO loginDTO ){
         return this.employeRepo.findByEmail(loginDTO.getEmail())
-                .filter( user -> passwordEncoder.matches(loginDTO.getPassword(), user.getPassWord() ))
+                .filter( user -> passwordEncoder.matches(loginDTO.getPassword(), user.getPassword() ))
                 .map( user -> ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,buildJWTCookie(user)).build())
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
