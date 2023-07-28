@@ -1,22 +1,32 @@
+
+
+
+###
+POST localhost:8080/sessions
+Content-Type: application/json
+
+{
+  "email" : "pass10123456@hotmail.fr",
+  "password": "pass10123456"
+}
+
+###
 POST localhost:8080/employe
 Content-Type: application/json
 
-
 {
-    "firstName" : "u1",
-    "lastName" : "pass1",
-    "passWord" : "pass1",
+    "firstName" : "u13MANAGER",
+    "lastName" : "pass13",
+    "passWord" : "pass13123456",
     "soldeConge" : 10,
     "soldeRtt" : 10,
-    "email" : "10",
-    "role" : "role",
-    "departement" : {
-      "role": ""
-    },
-    "manager" : {
+    "email" : "pass13123456@hotmail.fr",
+    "role" : "MANAGER",
+    "departementId" : 1,
+    "managerId": 5
 
-    }
 }
+
 
 ###
 POST localhost:8080/departement
@@ -25,4 +35,20 @@ Content-Type: application/json
 {
   "name" : "departementTest"
 }
+
+###
+POST localhost:8080/absence
+Content-Type: application/json
+
+{
+  "dateDebut" : "28/07/2023",
+  "dateFin" : "30/07/2023",
+  "statut" : "INITIALE",
+  "typeAbsence" : "RTT",
+  "employeId" : 7
+
+}
+
+###
+GET localhost:8080/employe
 

@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("sessions")
 public class SessionControl {
@@ -36,18 +38,23 @@ public class SessionControl {
     }
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody LoginDTO loginDTO ){
+//        Optional<Employe> employeOp = employeRepo.findByEmail(loginDTO.getEmail());
+//        boolean matches = passwordEncoder.matches(loginDTO.getPassword(), employeOp.get().getPassWord());
+//
+//        System.out.println("++++++++++++++++++++++" + matches);
+
         return this.employeRepo.findByEmail(loginDTO.getEmail())
-                .filter( user -> passwordEncoder.matches(loginDTO.getPassword(), user.getPassWord() ))
-                .map( user -> ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,buildJWTCookie(user)).build())
+                .filter( employe ->  passwordEncoder.matches(loginDTO.getPassword(), employe.getPassWord()))
+                .map( employe -> ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,buildJWTCookie(employe)).build())
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
-    private String buildJWTCookie(Employe user){
+    private String buildJWTCookie(Employe employe){
         Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
         String jetonJWT = Jwts.builder()
-                .setSubject(user.getEmail())
-                .addClaims(Map.of("roles",user.getRole()))
+                .setSubject(employe.getEmail())
+                .addClaims(Map.of("roles",employe.getRole()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getExpireIn() * 1000))
                 .signWith(
                         jwtConfig.getSecretKey()
