@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -40,14 +41,24 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                                 .parseClaimsJws(token)
                                 .getBody();
 
-                        String username = body.getSubject();
-                        List<String> roles = body.get("roles", List.class);
+                        String email = body.getSubject();
+//                        List<String> roles = body.get("roles", List.class);
+                        String role = body.get("roles", String.class);
+//                        System.out.println("roles=====================================ADMIN="+ role);
+                        //                        {sub=abc@hotmail.fr, roles=ADMIN, exp=1690576791}
+                        List<String> roles = new ArrayList<>();
+                        roles.add(role);
 
                         List<SimpleGrantedAuthority> authorities = roles
                                 .stream()
                                 .map(SimpleGrantedAuthority::new)
                                 .collect(Collectors.toList());
-                        Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
+//                       System.out.println("authorities====================================[ADMIN]="+ authorities);
+                        Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, authorities);
+
+//                       System.out.println("authentication====================================="+ authentication);
+//                      UsernamePasswordAuthenticationToken
+//                      [Principal=abc@hotmail.fr, Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ADMIN]]
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     });
         }

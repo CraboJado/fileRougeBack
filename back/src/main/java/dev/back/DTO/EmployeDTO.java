@@ -11,13 +11,18 @@ public class EmployeDTO {
 
     int soldeConge;
     int soldeRtt;
+
+    //TODO il faut que l'email soit unique
     String email;
 
+    // dans la base de donner ,c'est la valeur de enum
     Role role;
 
-    int departementId;
 
-    int managerId;
+    Integer departementId;
+
+    Integer managerId;
+
 
     public String getFirstName() {
         return firstName;
@@ -75,19 +80,21 @@ public class EmployeDTO {
         this.role = role;
     }
 
-    public int getDepartementId() {
+
+    public Integer getDepartementId() {
         return departementId;
     }
 
-    public void setDepartementId(int departementId) {
+    public void setDepartementId(Integer departementId) {
         this.departementId = departementId;
     }
 
-    public int getManagerId() {
+    public Integer getManagerId() {
         return managerId;
     }
 
-    public void setManagerId(int managerId) {
+    public void setManagerId(Integer managerId) {
+
         this.managerId = managerId;
     }
 }

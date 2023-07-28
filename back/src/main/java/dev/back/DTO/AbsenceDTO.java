@@ -14,7 +14,7 @@ public class AbsenceDTO {
     Statut statut;
     TypeAbsence typeAbsence;
 
-    Employe employe;
+    int employeId;
 
     public LocalDate getDateDebut() {
         return dateDebut;
@@ -48,11 +48,11 @@ public class AbsenceDTO {
         this.typeAbsence = typeAbsence;
     }
 
-    public Employe getEmploye() {
-        return employe;
+    public Integer getEmployeId() {
+        return employeId;
     }
 
-    public void setEmploye(Employe employe) {
-        this.employe = employe;
+    public void setEmploye(Integer employeId) {
+        this.employeId = employeId;
     }
 }
