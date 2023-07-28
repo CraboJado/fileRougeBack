@@ -18,7 +18,7 @@ public class DepartementService {
     public List<Departement> listDepartements() {
         return departementRepo.findAll();
     }
-
+    public Departement departementById(int id){ return  departementRepo.findById(id).orElseThrow();}
 
     @Transactional
     public void addDepartement(Departement departement) {

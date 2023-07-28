@@ -17,6 +17,7 @@ public class EmployeService {
     public List<Employe> listEmployes() {
         return employeRepo.findAll();
     }
+    public Employe employeById(int id){return employeRepo.findById(id).orElseThrow();}
     @Transactional
     public void addEmploye(Employe employe) {
         employeRepo.save(employe);
