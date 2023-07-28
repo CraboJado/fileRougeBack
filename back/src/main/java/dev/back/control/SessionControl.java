@@ -45,7 +45,7 @@ public class SessionControl {
 
         return this.employeRepo.findByEmail(loginDTO.getEmail())
 
-                .filter( employe ->  passwordEncoder.matches(loginDTO.getPassword(), employe.getPassWord()))
+                .filter( employe ->  passwordEncoder.matches(loginDTO.getPassword(), employe.getPassword()))
                 .map( employe -> ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,buildJWTCookie(employe)).build())
 
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
