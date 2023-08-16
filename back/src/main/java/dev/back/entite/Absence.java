@@ -20,7 +20,8 @@ public class Absence {
     LocalDate dateDebut;
     LocalDate dateFin;
 
-    Statut statut;
+    //TODO INITIALE DES AJOUTER
+    Statut statut ;
     TypeAbsence typeAbsence;
 
     @ManyToOne

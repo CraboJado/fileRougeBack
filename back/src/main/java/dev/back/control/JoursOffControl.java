@@ -33,4 +33,7 @@ public class JoursOffControl {
         joursOffService.addJourOff(joursOff);
     }
 
+    //TODO route PUT pour modifier JourOFF
+    //TODO route DELETE pour supprimer JourOFF
+
 }

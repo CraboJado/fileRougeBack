@@ -17,26 +17,44 @@ public class AbsenceControl {
     AbsenceService absenceService;
     EmployeService employeService;
 
-//    public AbsenceControl(AbsenceService absenceService) {
-//        this.absenceService = absenceService;
-//    }
-
     public AbsenceControl(AbsenceService absenceService, EmployeService employeService) {
         this.absenceService = absenceService;
         this.employeService = employeService;
     }
 
+
     @GetMapping
     public List<Absence> listAll(){
-      return  absenceService.listAbsences();
+        //TODO return un list absence d'un employé
+        return  absenceService.listAbsences();
     }
+
+    //TODO Method get list congés futures (
+    //TODO Method get list congés consommés  ( une absence
+    //TODO pour un MANAGER, list de ses collaborateur present et absentes
 
     @PostMapping
     public void addAbsence(@RequestBody AbsenceDTO absenceDTO){
+        //TODO regarder règle métier
         Employe employe = employeService.getEmployeById(absenceDTO.getEmployeId());
-        System.out.println("==============++++++++++++" + employe.getEmail());
 
-        Absence absence=new Absence(absenceDTO.getDateDebut(),absenceDTO.getDateFin(),absenceDTO.getStatut(),absenceDTO.getTypeAbsence(),employe);
+        Absence absence=new Absence(
+                absenceDTO.getDateDebut(),
+                absenceDTO.getDateFin(),
+                absenceDTO.getStatut(),
+                absenceDTO.getTypeAbsence(),
+                employe);
+
         absenceService.addAbsence(absence);
     }
+
+    //TODO validerAbsence par Manager :  MODIFIER STATUS DE L'ABSENCE de ses collaborateurs
+    //TODO @PutMapping
+    //TODO ATTENTION : 1. status est EN_ATTENTE ( traitement de nuit) , 2 L'ABSENCE de ses collaborateurs
+
+
+    // TODO pour EMPLOYE : modifier une demande d'absence au statut INITIALE ou REJETEE
+    //  @PutMapping
+
+    // TODO pour EMPLOYE : supprimer une demande d'absence quel que soit le statut
 }

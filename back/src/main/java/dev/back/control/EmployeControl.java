@@ -34,6 +34,7 @@ public class EmployeControl {
 
     @GetMapping
     public List<Employe> listAll(){
+
         return employeService.listEmployes();
     }
 

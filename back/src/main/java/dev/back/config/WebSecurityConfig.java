@@ -31,6 +31,8 @@ public class WebSecurityConfig {
                         auth -> auth
                                 // session = logique login
                                 .requestMatchers(antMatcher(HttpMethod.POST,"/sessions")).permitAll()
+                                //TODO parametrer une route POST "/jouroff" pour role ADMIN (concernant jourF et RTT)
+                                //TODO parametrer une route PUT "/absence" pour role MANAGER
                                 .anyRequest().authenticated()
                 )
                 .csrf( csrf -> csrf
