@@ -4,24 +4,26 @@
 ###
 POST localhost:8080/sessions
 Content-Type: application/json
+X-XSRF-TOKEN: 17192ef4-b3a8-44b7-8655-af213292f5b9
 
 {
-  "email" : "pass10123456@hotmail.fr",
-  "password": "pass10123456"
+  "email" : "pass923456@hotmail.fr",
+  "password": "pass923456"
 }
 
 ###
 POST localhost:8080/employe
 Content-Type: application/json
+X-XSRF-TOKEN: 737cde62-2711-41f2-88f8-bc43afb0cc94
 
 {
-    "firstName" : "u13MANAGER",
-    "lastName" : "pass13",
-    "password" : "pass13123456",
+    "firstName" : "u11",
+    "lastName" : "pass11",
+    "password" : "pass1123456",
     "soldeConge" : 10,
     "soldeRtt" : 10,
-    "email" : "pass13123456@hotmail.fr",
-    "role" : 0,
+    "email" : "pass1123456@hotmail.fr",
+    "roles" : ["MANAGER78","ADMIN78"],
     "departementId" : 1,
     "managerId": 5
 
@@ -31,6 +33,7 @@ Content-Type: application/json
 ###
 POST localhost:8080/departement
 Content-Type: application/json
+X-XSRF-TOKEN: 737cde62-2711-41f2-88f8-bc43afb0cc94
 
 {
   "name" : "departementTest"
@@ -39,6 +42,7 @@ Content-Type: application/json
 ###
 POST localhost:8080/absence
 Content-Type: application/json
+X-XSRF-TOKEN: 737cde62-2711-41f2-88f8-bc43afb0cc94
 
 {
   "dateDebut" : "2023-07-28",

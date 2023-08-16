@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -13,35 +15,39 @@ import lombok.Setter;
 public class Employe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    private int id;
 
-    String firstName;
-    String lastName;
-    String password;
+    private String firstName;
+    private String lastName;
+    private String password;
 
-    int soldeConge;
-    int soldeRtt;
+    private int soldeConge;
+    private int soldeRtt;
 
     @Email
-    String email;
-
-    Role role;
+    private String email;
 
     @ManyToOne
-    Departement departement;
+    private Departement departement;
 
     @ManyToOne
-    Employe manager;
+    private Employe manager;
 
-    public Employe(String firstName, String lastName, String password, int soldeConge, int soldeRtt, String email, Role role, Departement departement, Employe manager) {
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles;
+
+    public Employe(String firstName, String lastName, String password, int soldeConge, int soldeRtt, String email, List<String> roles, Departement departement, Employe manager) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.soldeConge = soldeConge;
         this.soldeRtt = soldeRtt;
         this.email = email;
-        this.role = role;
         this.departement = departement;
         this.manager = manager;
+        this.roles = roles;
+
     }
+
+
 }

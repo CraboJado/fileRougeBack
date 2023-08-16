@@ -41,12 +41,21 @@ public class EmployeControl {
     @PostMapping
 
     public ResponseEntity addEmploye(@RequestBody EmployeDTO employeDTO){
-        //TODO hasher MOT DE PASS
+
         String pswEncoded = passwordEncoder.encode(employeDTO.getPassword());
         Employe manager = employeService.getEmployeById(employeDTO.getManagerId());
         Departement departement = departementService.getDepartementById(employeDTO.getDepartementId());
 
-        Employe employe=new Employe(employeDTO.getFirstName(), employeDTO.getLastName(), pswEncoded, employeDTO.getSoldeConge(), employeDTO.getSoldeRtt(), employeDTO.getEmail(), employeDTO.getRole(), departement,manager);
+        Employe employe = new Employe(
+                employeDTO.getFirstName(),
+                employeDTO.getLastName(),
+                pswEncoded,
+                employeDTO.getSoldeConge(),
+                employeDTO.getSoldeRtt(),
+                employeDTO.getEmail(),
+                employeDTO.getRoles(),
+                departement,
+                manager);
 
         employeService.addEmploye(employe);
 

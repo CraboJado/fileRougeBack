@@ -56,7 +56,7 @@ public class SessionControl {
 
         String jetonJWT = Jwts.builder()
                 .setSubject(employe.getEmail())
-                .addClaims(Map.of("roles",employe.getRole()))
+                .addClaims(Map.of("roles",employe.getRoles()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getExpireIn() * 1000))
                 .signWith(
                         jwtConfig.getSecretKey()
