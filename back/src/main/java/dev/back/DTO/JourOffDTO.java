@@ -8,6 +8,12 @@ public class JourOffDTO {
     LocalDate jour;
     TypeJour typeJour;
 
+
+    public JourOffDTO(LocalDate jour, TypeJour typeJour) {
+        this.jour = jour;
+        this.typeJour = typeJour;
+    }
+
     public LocalDate getJour() {
         return jour;
     }

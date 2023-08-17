@@ -9,8 +9,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class AbsenceDTO {
-    LocalDateTime dateDebut;
-    LocalDateTime dateFin;
+    LocalDate dateDebut;
+    LocalDate dateFin;
 
     Statut statut;
     TypeAbsence typeAbsence;
@@ -21,19 +21,19 @@ public class AbsenceDTO {
     int employeId;
 
 
-    public LocalDateTime getDateDebut() {
+    public LocalDate getDateDebut() {
         return dateDebut;
     }
 
-    public void setDateDebut(LocalDateTime dateDebut) {
+    public void setDateDebut(LocalDate dateDebut) {
         this.dateDebut = dateDebut;
     }
 
-    public LocalDateTime getDateFin() {
+    public LocalDate getDateFin() {
         return dateFin;
     }
 
-    public void setDateFin(LocalDateTime dateFin) {
+    public void setDateFin(LocalDate dateFin) {
         this.dateFin = dateFin;
     }
 
@@ -69,7 +69,7 @@ public class AbsenceDTO {
         this.employeId = employeId;
     }
 
-    public AbsenceDTO(LocalDateTime dateDebut, LocalDateTime dateFin, Statut statut, TypeAbsence typeAbsence, String motif, int employeId) {
+    public AbsenceDTO(LocalDate dateDebut, LocalDate dateFin, Statut statut, TypeAbsence typeAbsence, String motif, int employeId) {
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         this.statut = statut;

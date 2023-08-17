@@ -20,8 +20,8 @@ public class Absence {
 
     LocalDateTime dateCreation;
 
-    LocalDateTime dateDebut;
-    LocalDateTime dateFin;
+    LocalDate dateDebut;
+    LocalDate dateFin;
 
     //TODO INITIALE DES AJOUTER
     Statut statut ;
@@ -32,14 +32,12 @@ public class Absence {
     @ManyToOne
     Employe employe;
 
-    public Absence(LocalDateTime dateCreation, LocalDateTime dateDebut, LocalDateTime dateFin, Statut statut, TypeAbsence typeAbsence, String motif, Employe employe) {
-        this.dateCreation = dateCreation;
-        this.dateDebut = dateDebut;
-        this.dateFin = dateFin;
-        this.statut = statut;
-        this.typeAbsence = typeAbsence;
-        this.motif = motif;
-        this.employe = employe;
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public LocalDateTime getDateCreation() {
@@ -50,19 +48,19 @@ public class Absence {
         this.dateCreation = dateCreation;
     }
 
-    public LocalDateTime getDateDebut() {
+    public LocalDate getDateDebut() {
         return dateDebut;
     }
 
-    public void setDateDebut(LocalDateTime dateDebut) {
+    public void setDateDebut(LocalDate dateDebut) {
         this.dateDebut = dateDebut;
     }
 
-    public LocalDateTime getDateFin() {
+    public LocalDate getDateFin() {
         return dateFin;
     }
 
-    public void setDateFin(LocalDateTime dateFin) {
+    public void setDateFin(LocalDate dateFin) {
         this.dateFin = dateFin;
     }
 
@@ -95,6 +93,16 @@ public class Absence {
     }
 
     public void setEmploye(Employe employe) {
+        this.employe = employe;
+    }
+
+    public Absence(LocalDateTime dateCreation, LocalDate dateDebut, LocalDate dateFin, Statut statut, TypeAbsence typeAbsence, String motif, Employe employe) {
+        this.dateCreation = dateCreation;
+        this.dateDebut = dateDebut;
+        this.dateFin = dateFin;
+        this.statut = statut;
+        this.typeAbsence = typeAbsence;
+        this.motif = motif;
         this.employe = employe;
     }
 }

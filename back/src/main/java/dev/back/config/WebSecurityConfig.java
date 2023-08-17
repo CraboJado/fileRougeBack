@@ -29,15 +29,21 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests(
                         auth -> auth
-                                // session = logique login
                                 .requestMatchers(antMatcher(HttpMethod.POST,"/sessions")).permitAll()
+                                .requestMatchers(antMatcher(HttpMethod.POST,"/employe")).permitAll()
+                                .requestMatchers(antMatcher(HttpMethod.POST,"/jouroff/modifier")).hasRole("ADMIN")
+
+
                                 //TODO parametrer une route POST "/jouroff" pour role ADMIN (concernant jourF et RTT)
                                 //TODO parametrer une route PUT "/absence" pour role MANAGER
                                 .anyRequest().authenticated()
                 )
-                .csrf( csrf -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .csrfTokenRequestHandler(new XorCsrfTokenRequestAttributeHandler()::handle)
+                .csrf( csrf -> csrf.disable()
+                        // .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        //.csrfTokenRequestHandler(new XorCsrfTokenRequestAttributeHandler()::handle)
+                        //.ignoringRequestMatchers(new AntPathRequestMatcher("/sessions"))
+
+
                 )
                 .headers( headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)

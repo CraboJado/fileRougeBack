@@ -73,7 +73,7 @@ public class EmployeControl {
     }
 
 
-    @RequestMapping("/modifier")
+
     @PutMapping
     public ResponseEntity<?> testPut(@RequestBody Employe employe){
 
@@ -89,6 +89,14 @@ public class EmployeControl {
 
         return ResponseEntity.status(HttpStatus.OK).body("l'employé a été modfié");
     }
+
+    @RequestMapping("/delete")
+    @PostMapping
+    public ResponseEntity<?> deleteEmploye(@RequestBody int employeId){
+        employeService.deleteEmploye(employeId);
+        return   ResponseEntity.status(HttpStatus.CREATED).body("jour officiel supprimé");
+    }
+
 
 }
 

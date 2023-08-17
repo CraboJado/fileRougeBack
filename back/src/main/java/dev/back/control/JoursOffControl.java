@@ -37,9 +37,7 @@ public class JoursOffControl {
     }
 
 
-
-    @RequestMapping("/modifier")
-    @PostMapping
+    @PutMapping
     public ResponseEntity<?> changeJourOffDate(@RequestBody JoursOff joursOff){
         JoursOff joursOff1=joursOffService.jourOffById(joursOff.getId());
         joursOff1.setJour(joursOff.getJour());

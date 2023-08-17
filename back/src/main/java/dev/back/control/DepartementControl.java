@@ -36,8 +36,8 @@ public class DepartementControl {
         return   ResponseEntity.status(HttpStatus.CREATED).body("departement créé");
     }
 
-    @RequestMapping("/modifier")
-    @PostMapping
+
+    @PutMapping
     public ResponseEntity<?>  ChangeDepartement(@RequestBody Departement departement) {
         Departement departement1= departementService.getDepartementById(departement.getId());
         departement1.setName(departement.getName());
@@ -48,4 +48,14 @@ public class DepartementControl {
 
 
 
+
+    @RequestMapping("/delete")
+    @PostMapping
+    public ResponseEntity<?> deleteDepartement(@RequestBody int departementid){
+       departementService.deleteDepartement(departementid);
+        return   ResponseEntity.status(HttpStatus.CREATED).body("départemet supprimé");
+    }
+
 }
+
+
