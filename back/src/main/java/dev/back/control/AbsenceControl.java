@@ -22,31 +22,48 @@ public class AbsenceControl {
         this.employeService = employeService;
     }
 
-
     @GetMapping
     public List<Absence> listAll(){
-        //TODO return un list absence d'un employé
         return  absenceService.listAbsences();
     }
 
-    //TODO Method get list congés futures (
-    //TODO Method get list congés consommés  ( une absence
-    //TODO pour un MANAGER, list de ses collaborateur present et absentes
+
 
     @PostMapping
     public void addAbsence(@RequestBody AbsenceDTO absenceDTO){
         //TODO regarder règle métier
         Employe employe = employeService.getEmployeById(absenceDTO.getEmployeId());
+        System.out.println("==============++++++++++++" + employe.getEmail());
 
-        Absence absence=new Absence(
-                absenceDTO.getDateDebut(),
-                absenceDTO.getDateFin(),
-                absenceDTO.getStatut(),
-                absenceDTO.getTypeAbsence(),
-                employe);
-
+        Absence absence=new Absence(absenceDTO.getDateDebut(),absenceDTO.getDateFin(),absenceDTO.getStatut(),absenceDTO.getTypeAbsence(),employe);
         absenceService.addAbsence(absence);
     }
+
+
+    @GetMapping
+    public List<Absence> listAllByEmploye(
+            @RequestParam(name = "id", required = false) int id){
+        return  absenceService.listAbsenceyEmploye(id);
+    }
+
+    @GetMapping
+    public List<Absence> listAllByEmployeDepartement(
+            @RequestParam(name = "departementId", required = false) int id){
+        return  absenceService.listAbsenceyEmployeDepartement(id);
+    }
+
+
+     @PostMapping
+    public void ChangeAbsence(@RequestBody int absenceId, @RequestBody Statut newStatut) {
+
+        Absence absence = absenceService.getAbsenceById(absenceId);
+        absence.setStatut(newStatut);
+        absenceService.addAbsence(absence);//addabsence uses .save() so it will update it if it already exists
+
+     }
+
+
+
 
     //TODO validerAbsence par Manager :  MODIFIER STATUS DE L'ABSENCE de ses collaborateurs
     //TODO @PutMapping
