@@ -22,9 +22,8 @@ public class EmployeService {
 
     public Employe getEmployeById(Integer id){
         Optional<Employe> EmployeOp = employeRepo.findById(id);
-        if(EmployeOp.isPresent()) return EmployeOp.get();
         // else throw new Exception()
-        else return null;
+        return EmployeOp.orElse(null);
 
     }
 

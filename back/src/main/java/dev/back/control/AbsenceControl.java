@@ -33,8 +33,6 @@ public class AbsenceControl {
     public void addAbsence(@RequestBody AbsenceDTO absenceDTO){
         //TODO regarder règle métier
         Employe employe = employeService.getEmployeById(absenceDTO.getEmployeId());
-        System.out.println("==============++++++++++++" + employe.getEmail());
-
         Absence absence=new Absence(absenceDTO.getDateDebut(),absenceDTO.getDateFin(),absenceDTO.getStatut(),absenceDTO.getTypeAbsence(),employe);
         absenceService.addAbsence(absence);
     }
@@ -62,16 +60,4 @@ public class AbsenceControl {
 
      }
 
-
-
-
-    //TODO validerAbsence par Manager :  MODIFIER STATUS DE L'ABSENCE de ses collaborateurs
-    //TODO @PutMapping
-    //TODO ATTENTION : 1. status est EN_ATTENTE ( traitement de nuit) , 2 L'ABSENCE de ses collaborateurs
-
-
-    // TODO pour EMPLOYE : modifier une demande d'absence au statut INITIALE ou REJETEE
-    //  @PutMapping
-
-    // TODO pour EMPLOYE : supprimer une demande d'absence quel que soit le statut
 }

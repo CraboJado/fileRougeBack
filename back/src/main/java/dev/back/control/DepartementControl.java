@@ -30,4 +30,7 @@ public class DepartementControl {
         Departement departement= new Departement(departementDTO.getName());
         departementService.addDepartement(departement);
     }
+
+
+
 }

@@ -38,10 +38,8 @@ public class EmployeControl {
         return employeService.listEmployes();
     }
 
-    //TODO ajouter @Secure(role = "ADMIN") si c'est que ADMIN qui ajoute employe
     @PostMapping
-
-    public ResponseEntity addEmploye(@RequestBody EmployeDTO employeDTO){
+    public ResponseEntity<?> addEmploye(@RequestBody EmployeDTO employeDTO){
 
         String pswEncoded = passwordEncoder.encode(employeDTO.getPassword());
         Employe manager = employeService.getEmployeById(employeDTO.getManagerId());
@@ -62,5 +60,41 @@ public class EmployeControl {
 
         return ResponseEntity.status(HttpStatus.CREATED).body("employe cree");
     }
+
+
+
+    @PostMapping
+    public ResponseEntity<?> changeEmployePassword(@RequestBody int employeId,@RequestBody String newPass){
+      Employe employe= employeService.getEmployeById(employeId);
+        employe.setPassword(newPass);
+        employeService.addEmploye(employe);
+        return   ResponseEntity.status(HttpStatus.CREATED).body("mot de passe changé");
+    }
+
+    @PostMapping
+    public ResponseEntity<?> changeEmployeFirstName(@RequestBody int employeId,@RequestBody String newFirstName){
+        Employe employe= employeService.getEmployeById(employeId);
+        employe.setFirstName(newFirstName);
+        employeService.addEmploye(employe);
+        return   ResponseEntity.status(HttpStatus.CREATED).body("firstName changé");
+    }
+
+    @PostMapping
+    public ResponseEntity<?> changeEmployeLastName(@RequestBody int employeId,@RequestBody String newLastName){
+        Employe employe= employeService.getEmployeById(employeId);
+        employe.setPassword(newLastName);
+        employeService.addEmploye(employe);
+        return   ResponseEntity.status(HttpStatus.CREATED).body("lastName changé");
+    }
+    @PostMapping
+    public ResponseEntity<?> changeEmployeMail(@RequestBody int employeId,@RequestBody String newMail){
+        Employe employe= employeService.getEmployeById(employeId);
+        employe.setEmail(newMail);
+        employeService.addEmploye(employe);
+        return   ResponseEntity.status(HttpStatus.CREATED).body("email changé");
+    }
+
+
+
 
 }
