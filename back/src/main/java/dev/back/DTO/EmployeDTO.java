@@ -15,7 +15,6 @@ public class EmployeDTO {
     int soldeConge;
     int soldeRtt;
 
-    //TODO il faut que l'email soit unique
     String email;
 
     List<String> roles;

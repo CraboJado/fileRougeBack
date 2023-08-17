@@ -10,7 +10,10 @@ import java.util.List;
 @Repository
 public interface AbsenceRepo extends JpaRepository<Absence,Integer> {
 
-    List<Absence> getAbsenceByEmploye_Id(int id);
-    List<Absence> getAbsenceByEmploye_Departement_Id(int id);
+    List<Absence> getAbsenceByEmploye_Id(int idEmploye);
+    List<Absence> getAbsenceByEmploye_Departement_Id(int idDepartement);
+    List<Absence> getAbsenceByEmploye_Manager_Id(int idManager);
+
+
 
 }

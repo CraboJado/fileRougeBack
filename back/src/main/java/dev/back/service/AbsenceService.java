@@ -26,19 +26,19 @@ public class AbsenceService {
     }
 
 
-    public List<Absence> listAbsenceyEmploye(int id){
+    public List<Absence> listAbsenceByEmploye(int id){
         return absenceRepo.getAbsenceByEmploye_Id(id);
     }
-    public List<Absence> listAbsenceyEmployeDepartement(int id){
+    public List<Absence> listAbsenceByEmployeDepartement(int id){
         return absenceRepo.getAbsenceByEmploye_Departement_Id(id);
     }
 
     public Absence getAbsenceById(Integer id){
         Optional<Absence> absenceOp = absenceRepo.findById(id);
-        // else throw new Exception()
-        return absenceOp.orElse(null);
-
+        return  absenceOp.orElseThrow();
     }
 
-
+    public List<Absence> getAbsenceByEmployeManagaerId(int id){
+        return absenceRepo.getAbsenceByEmploye_Manager_Id(id);
+    }
 }

@@ -27,9 +27,23 @@ public class EmployeService {
 
     }
 
+    public List<Employe> getEmployeByIdMnager(Integer id){
+
+
+
+        // else throw new Exception()
+        return employeRepo.findAllByManager_Id(id);
+
+    }
+
+    public Employe getEmployeByEmail(String email){
+        return employeRepo.findByEmail(email).orElseThrow();
+    }
+
     @Transactional
     public void addEmploye(Employe employe) {
         employeRepo.save(employe);
+
     }
 
 }

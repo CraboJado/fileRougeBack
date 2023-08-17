@@ -1,8 +1,12 @@
 package dev.back.control;
 
+
 import dev.back.DTO.DepartementDTO;
+import dev.back.entite.Absence;
 import dev.back.entite.Departement;
 import dev.back.service.DepartementService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,10 +30,21 @@ public class DepartementControl {
     }
 
     @PostMapping
-    public void addDepartement(@RequestBody DepartementDTO departementDTO){
+    public ResponseEntity<?> addDepartement(@RequestBody DepartementDTO departementDTO){
         Departement departement= new Departement(departementDTO.getName());
         departementService.addDepartement(departement);
+        return   ResponseEntity.status(HttpStatus.CREATED).body("departement créé");
     }
+
+    @RequestMapping("/modifier")
+    @PostMapping
+    public ResponseEntity<?>  ChangeDepartement(@RequestBody Departement departement) {
+        Departement departement1= departementService.getDepartementById(departement.getId());
+        departement1.setName(departement.getName());
+        departementService.addDepartement(departement);
+        return   ResponseEntity.status(HttpStatus.CREATED).body("département modifié");
+
+  }
 
 
 

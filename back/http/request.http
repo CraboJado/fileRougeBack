@@ -4,26 +4,24 @@
 ###
 POST localhost:8080/sessions
 Content-Type: application/json
-X-XSRF-TOKEN: 17192ef4-b3a8-44b7-8655-af213292f5b9
 
 {
-  "email" : "pass923456@hotmail.fr",
-  "password": "pass923456"
+  "email" : "password1@hotmail.fr",
+  "password": "password1"
 }
 
 ###
 POST localhost:8080/employe
 Content-Type: application/json
-X-XSRF-TOKEN: 737cde62-2711-41f2-88f8-bc43afb0cc94
 
 {
     "firstName" : "u11",
     "lastName" : "pass11",
-    "password" : "pass1123456",
+    "password" : "password1",
     "soldeConge" : 10,
     "soldeRtt" : 10,
-    "email" : "pass1123456@hotmail.fr",
-    "roles" : ["MANAGER78","ADMIN78"],
+    "email" : "password1@hotmail.fr",
+    "roles" : ["MANAGER","ADMIN"],
     "departementId" : 1,
     "managerId": 5
 
@@ -33,7 +31,6 @@ X-XSRF-TOKEN: 737cde62-2711-41f2-88f8-bc43afb0cc94
 ###
 POST localhost:8080/departement
 Content-Type: application/json
-X-XSRF-TOKEN: 737cde62-2711-41f2-88f8-bc43afb0cc94
 
 {
   "name" : "departementTest"
@@ -42,13 +39,13 @@ X-XSRF-TOKEN: 737cde62-2711-41f2-88f8-bc43afb0cc94
 ###
 POST localhost:8080/absence
 Content-Type: application/json
-X-XSRF-TOKEN: 737cde62-2711-41f2-88f8-bc43afb0cc94
 
 {
   "dateDebut" : "2023-07-28",
   "dateFin" : "2023-08-21",
   "statut" : "INITIALE",
   "typeAbsence" : "RTT",
+  "motif": "",
   "employeId" : 1
 
 }
@@ -56,3 +53,44 @@ X-XSRF-TOKEN: 737cde62-2711-41f2-88f8-bc43afb0cc94
 ###
 GET localhost:8080/employe
 
+###
+POST localhost:8080/absence/newstatut
+Content-Type: application/json
+
+{
+  "absenceId": 14,
+  "newStatut": "VALIDEE"
+}
+
+###
+POST  localhost:8080/employe/firstname
+Content-Type: application/json
+
+{
+  "employeId":3,
+  "newFirstName":"testetestetestestetest"
+
+}
+###
+
+PUT localhost:8080/employe/newpassword
+Content-Type: application/json
+
+{
+  "id": 1,
+"firstName" : "te",
+"lastName" : "teteet",
+"soldeConge" : 1,
+"soldeRtt" : 1,
+"email" : "password1@hotmail.fr",
+"roles" : ["MANAGER","ADMIN"],
+"departementId" : 1,
+"managerId": 5,
+  "password": "TRTRTRSTSTRJNJiu"
+}
+
+
+###
+
+POST localhost:8080/logout
+Content-Type: application/json

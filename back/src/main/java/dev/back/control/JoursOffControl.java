@@ -29,31 +29,31 @@ public class JoursOffControl {
     }
 
     @PostMapping()
-    public void addJourOff(@RequestBody JourOffDTO jourOffDTO) {
+    public ResponseEntity<?> addJourOff(@RequestBody JourOffDTO jourOffDTO) {
         //TODO Verifier le role user
         JoursOff joursOff = new JoursOff(jourOffDTO.getJour(),jourOffDTO.getTypeJour());
         joursOffService.addJourOff(joursOff);
-    }
-
-    //TODO route PUT pour modifier JourOFF
-    //TODO route DELETE pour supprimer JourOFF
-
-    @PostMapping
-    public void changeJourOffDate(@RequestBody int jourOffId,@RequestBody LocalDate newDate){
-        JoursOff joursOff=joursOffService.JourOffById(jourOffId);
-        joursOff.setJour(newDate);
-    }
-
-    @PostMapping
-    public void changeJourOffType(@RequestBody int jourOffId,@RequestBody TypeJour newType){
-        JoursOff joursOff=joursOffService.JourOffById(jourOffId);
-        joursOff.setTypeJour(newType);
+        return   ResponseEntity.status(HttpStatus.CREATED).body("jour officiel créé");
     }
 
 
+
+    @RequestMapping("/modifier")
     @PostMapping
-    public void deleteJourOff(@RequestBody int jourOffId){
+    public ResponseEntity<?> changeJourOffDate(@RequestBody JoursOff joursOff){
+        JoursOff joursOff1=joursOffService.jourOffById(joursOff.getId());
+        joursOff1.setJour(joursOff.getJour());
+        joursOff1.setTypeJour(joursOff.getTypeJour());
+        return   ResponseEntity.status(HttpStatus.CREATED).body("date changée");
+    }
+
+
+
+    @RequestMapping("/delete")
+    @PostMapping
+    public ResponseEntity<?> deleteJourOff(@RequestBody int jourOffId){
         joursOffService.deleteJourOff(jourOffId);
+        return   ResponseEntity.status(HttpStatus.CREATED).body("jour officiel supprimé");
     }
 
 }

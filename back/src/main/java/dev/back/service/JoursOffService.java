@@ -26,7 +26,7 @@ public class JoursOffService {
 
     public void deleteJourOff(JoursOff joursOff){joursOffRepo.delete(joursOff);}
 
-    public JoursOff JourOffById(int id){return joursOffRepo.findById(id).orElseThrow();}
+    public JoursOff jourOffById(int id){return joursOffRepo.findById(id).orElseThrow();}
 
     public void deleteJourOff(int id){joursOffRepo.delete(joursOffRepo.findById(id).orElseThrow());}
 
