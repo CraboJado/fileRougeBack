@@ -22,8 +22,11 @@ public class JoursOff {
     LocalDate jour;
     TypeJour typeJour;
 
-    public JoursOff(LocalDate jour, TypeJour typeJour) {
+    String description;
+
+    public JoursOff(LocalDate jour, TypeJour typeJour, String description) {
         this.jour = jour;
         this.typeJour = typeJour;
+        this.description = description;
     }
 }

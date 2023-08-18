@@ -7,12 +7,7 @@ import java.time.LocalDate;
 public class JourOffDTO {
     LocalDate jour;
     TypeJour typeJour;
-
-
-    public JourOffDTO(LocalDate jour, TypeJour typeJour) {
-        this.jour = jour;
-        this.typeJour = typeJour;
-    }
+String description;
 
     public LocalDate getJour() {
         return jour;
@@ -28,5 +23,19 @@ public class JourOffDTO {
 
     public void setTypeJour(TypeJour typeJour) {
         this.typeJour = typeJour;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public JourOffDTO(LocalDate jour, TypeJour typeJour, String description) {
+        this.jour = jour;
+        this.typeJour = typeJour;
+        this.description = description;
     }
 }

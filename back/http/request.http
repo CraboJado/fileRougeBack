@@ -17,10 +17,10 @@ Content-Type: application/json
 {
     "firstName" : "u11",
     "lastName" : "pass11",
-    "password" : "passwordm",
+    "password" : "passwordT",
     "soldeConge" : 10,
     "soldeRtt" : 10,
-    "email" : "passwordm@hotmail.fr",
+    "email" : "passwordT@hotmail.fr",
     "roles" : ["MANAGER"],
     "departementId" : 1,
     "managerId": 5
@@ -37,26 +37,27 @@ Content-Type: application/json
 }
 
 ###
-PUT localhost:8080/absence
+PUT localhost:8080/absence/1
 Content-Type: application/json
 
 {
-  "id": 1,
   "dateDebut" : "2023-08-10",
   "dateFin" : "2023-08-13",
-  "statut" : "EN_ATTENTE",
+  "statut" : 1,
   "typeAbsence" : "RTT",
   "motif": "",
   "employeId" : 1
 }
 
 ###
-POST localhost:8080/jouroff
+PUT localhost:8080/jouroff
 Content-Type: application/json
 
 {
-  "jour" : "2023-08-21",
-  "typeJour": "RTT_EMPLOYEUR"
+  "id" : 1,
+  "jour" : "2023-08-24",
+  "typeJour": "RTT_EMPLOYEUR",
+  "description" : "vac"
 }
 
 ###
@@ -65,11 +66,10 @@ Content-Type: application/json
 
 ###
 
-PUT localhost:8080/employe/newpassword
+PUT localhost:8080/employe/newpassword/1
 Content-Type: application/json
 
 {
-  "id": 1,
 "firstName" : "te",
 "lastName" : "teteet",
 "soldeConge" : 1,
@@ -78,7 +78,7 @@ Content-Type: application/json
 "roles" : ["MANAGER"],
 "departementId" : 1,
 "managerId": 5,
-  "password": "testtest"
+  "password": "6666666666666666"
 }
 
 
@@ -86,3 +86,6 @@ Content-Type: application/json
 
 POST localhost:8080/logout
 Content-Type: application/json
+
+###
+GET localhost:8080/jouroff

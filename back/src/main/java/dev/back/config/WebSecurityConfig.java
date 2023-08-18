@@ -31,7 +31,8 @@ public class WebSecurityConfig {
                         auth -> auth
                                 .requestMatchers(antMatcher(HttpMethod.POST,"/sessions")).permitAll()
                                 .requestMatchers(antMatcher(HttpMethod.POST,"/employe")).permitAll()
-                                .requestMatchers(antMatcher(HttpMethod.POST,"/jouroff/modifier")).hasRole("ADMIN")
+                                .requestMatchers(antMatcher(HttpMethod.POST,"jouroff/**")).hasAuthority("ADMIN")
+
 
 
                                 //TODO parametrer une route POST "/jouroff" pour role ADMIN (concernant jourF et RTT)

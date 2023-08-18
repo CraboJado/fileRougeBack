@@ -7,6 +7,7 @@ import dev.back.service.EmployeService;
 import dev.back.service.JoursOffService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
@@ -93,20 +94,31 @@ public class AbsenceControl {
 
 
 
-    @PutMapping
-    public ResponseEntity<?> ChangeAbsenceStatut(@RequestBody Absence absence) {
-        Absence absence1 = absenceService.getAbsenceById(absence.getId());
+
+
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> ChangeAbsenceStatut(@RequestBody AbsenceDTO absence, @PathVariable("id") String id) {
+
+        System.out.println(id);
+
+        int absenceIdInt= Integer.parseInt(id);
+
+        Absence absence1 = absenceService.getAbsenceById(absenceIdInt);
 
         long nombreDeJour = DAYS.between(absence.getDateDebut(), absence.getDateFin());
-        System.out.println(nombreDeJour);
-        System.out.println(  absence.getDateFin().getDayOfWeek());
-        List<LocalDate> listeJourAbsence = absence.getDateDebut().datesUntil(absence.getDateFin()).toList();
+
+        List<LocalDate> listeJourAbsence = absence.getDateDebut().datesUntil(absence.getDateFin().plusDays(1)).toList();
+        for (LocalDate date:listeJourAbsence){
+            System.out.println(date);
+        }
+
         System.out.println(listeJourAbsence.size());
-        Employe employe = absence.getEmploye();
+        Employe employe = employeService.getEmployeById(absence.getEmployeId());
 
-        System.out.println(employe.getSoldeRtt());
-
-
+        int nbRttNeeded=0;
+        int nbCongeNeeded=0;
 
         for(LocalDate jour : listeJourAbsence) {
 
@@ -116,11 +128,12 @@ public class AbsenceControl {
 
                 for(JoursOff joursOff:jourOffs){
 
-                    if(!jour.equals(joursOff)){
+                    if(!jour.equals(joursOff.getJour())){
 
                         if(absence.getTypeAbsence().equals(TypeAbsence.RTT)){
 
                             employe.setSoldeRtt(employe.getSoldeRtt()-1);
+                            nbRttNeeded++;
 
                         }
 
@@ -128,6 +141,7 @@ public class AbsenceControl {
                         if(absence.getTypeAbsence().equals(TypeAbsence.CONGE_PAYE)){
 
                             employe.setSoldeRtt(employe.getSoldeConge()-1);
+                            nbCongeNeeded++;
 
                         }
 
@@ -145,10 +159,16 @@ public class AbsenceControl {
 
 
 
-            employeService.addEmploye(employe);
+
         System.out.println(employe.getSoldeRtt());
 
             absence1.setStatut(absence.getStatut());
+            if(absence1.getStatut().equals(Statut.REJETEE)){
+                employe.setSoldeConge(employe.getSoldeConge()+nbCongeNeeded);
+                employe.setSoldeRtt(employe.getSoldeRtt()+nbRttNeeded);
+            }
+        employeService.addEmploye(employe);
+
             absenceService.addAbsence(absence1);//addabsence uses .save() so it will update it if it already exists
             return ResponseEntity.status(HttpStatus.CREATED).body("statut changé");
         }

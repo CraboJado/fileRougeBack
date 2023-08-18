@@ -31,7 +31,7 @@ public class JoursOffControl {
     @PostMapping()
     public ResponseEntity<?> addJourOff(@RequestBody JourOffDTO jourOffDTO) {
         //TODO Verifier le role user
-        JoursOff joursOff = new JoursOff(jourOffDTO.getJour(),jourOffDTO.getTypeJour());
+        JoursOff joursOff = new JoursOff(jourOffDTO.getJour(),jourOffDTO.getTypeJour(),jourOffDTO.getDescription());
         joursOffService.addJourOff(joursOff);
         return   ResponseEntity.status(HttpStatus.CREATED).body("jour officiel créé");
     }
@@ -42,6 +42,8 @@ public class JoursOffControl {
         JoursOff joursOff1=joursOffService.jourOffById(joursOff.getId());
         joursOff1.setJour(joursOff.getJour());
         joursOff1.setTypeJour(joursOff.getTypeJour());
+        joursOff1.setDescription(joursOff.getDescription());
+        joursOffService.addJourOff(joursOff1);
         return   ResponseEntity.status(HttpStatus.CREATED).body("date changée");
     }
 
