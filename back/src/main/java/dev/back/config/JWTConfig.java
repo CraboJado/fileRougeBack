@@ -12,14 +12,15 @@ import java.util.Base64;
 @Configuration
 public class JWTConfig {
 
-    @Value(("${jwt.expires_in}"))
+    @Value("${jwt.expires_in}")
     private long expireIn;
 
-    @Value(("${jwt.cookie}"))
+    @Value("${jwt.cookie}")
     private String cookie;
 
-    @Value(("${jwt.secret}"))
+    @Value("${jwt.secret}")
     private String secret;
+
     private Key secretKey;
 
     @PostConstruct

@@ -27,6 +27,11 @@ public class EmployeService {
 
     }
 
+
+    public void deleteEmploye(int id){employeRepo.delete(employeRepo.findById(id).orElseThrow());}
+
+
+
     public List<Employe> getEmployeByIdMnager(Integer id){
 
 

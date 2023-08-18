@@ -38,6 +38,9 @@ public class AbsenceService {
         return  absenceOp.orElseThrow();
     }
 
+
+    public void deleteAbsence(int id){absenceRepo.delete(absenceRepo.findById(id).orElseThrow());}
+
     public List<Absence> getAbsenceByEmployeManagaerId(int id){
         return absenceRepo.getAbsenceByEmploye_Manager_Id(id);
     }

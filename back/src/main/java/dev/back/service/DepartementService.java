@@ -30,6 +30,7 @@ public class DepartementService {
 
     }
 
+    public void deleteDepartement(int id){departementRepo.delete(departementRepo.findById(id).orElseThrow());}
 
 
     @Transactional
