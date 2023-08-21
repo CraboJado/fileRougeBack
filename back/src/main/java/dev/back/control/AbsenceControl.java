@@ -3,6 +3,7 @@ package dev.back.control;
 import dev.back.DTO.AbsenceDTO;
 import dev.back.entite.*;
 import dev.back.service.AbsenceService;
+import dev.back.service.EmailServiceImpl;
 import dev.back.service.EmployeService;
 import dev.back.service.JoursOffService;
 import org.springframework.http.HttpStatus;
@@ -31,10 +32,13 @@ public class AbsenceControl {
 
     JoursOffService joursOffService;
 
-    public AbsenceControl(AbsenceService absenceService, EmployeService employeService, JoursOffService joursOffService) {
+    EmailServiceImpl emailService;
+
+    public AbsenceControl(AbsenceService absenceService, EmployeService employeService, JoursOffService joursOffService, EmailServiceImpl emailService) {
         this.absenceService = absenceService;
         this.employeService = employeService;
         this.joursOffService = joursOffService;
+        this.emailService = emailService;
     }
 
     @GetMapping
@@ -170,7 +174,15 @@ public class AbsenceControl {
         employeService.addEmploye(employe);
 
             absenceService.addAbsence(absence1);//addabsence uses .save() so it will update it if it already exists
-            return ResponseEntity.status(HttpStatus.CREATED).body("statut changé");
+
+
+        emailService.sendSimpleMail("antoine.ligerot@outlook.fr","le statut de votre demande de congé à été modifié, veuillez vous connnecter a votre compte pour vérifier"
+        + "\n " + "nouveau statut = " + absence.getStatut(),"le statut de votre absence à changé" );
+
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("statut changé");
+
+
         }
 
     @RequestMapping("/delete")
