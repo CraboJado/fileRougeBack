@@ -56,4 +56,13 @@ public class JoursOffControl {
         return   ResponseEntity.status(HttpStatus.CREATED).body("jour officiel supprimé");
     }
 
+    @PostMapping
+    @RequestMapping("/jourferie")
+    public ResponseEntity<?> addJourFerie(){
+        joursOffService.fetchAndSaveJoursFeries(2023);
+        return   ResponseEntity.status(HttpStatus.CREATED).body("les jours fériés");
+
+    }
+
+
 }

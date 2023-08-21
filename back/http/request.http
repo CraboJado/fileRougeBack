@@ -89,3 +89,19 @@ Content-Type: application/json
 
 ###
 GET localhost:8080/jouroff
+
+
+###
+POST localhost:8080/email
+Content-Type: application/json
+
+{
+  "email": "antoine.ligerot@outlook.fr",
+  "content": "test bonjour"
+}
+
+###
+GET https://calendrier.api.gouv.fr/jours-feries/metropole/2023.json
+###
+
+
