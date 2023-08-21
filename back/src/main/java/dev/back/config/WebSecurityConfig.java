@@ -30,13 +30,18 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers(antMatcher(HttpMethod.POST,"/sessions")).permitAll()
-                                .requestMatchers(antMatcher(HttpMethod.POST,"/employe")).permitAll()
-                                .requestMatchers(antMatcher(HttpMethod.POST,"jouroff/**")).hasAuthority("ADMIN")
+                                .requestMatchers(antMatcher(HttpMethod.POST,"/employe")).hasAuthority("ADMIN")
+                                .requestMatchers(antMatcher(HttpMethod.POST,"/jouroff/**")).hasAuthority("ADMIN")
+                                .requestMatchers(antMatcher(HttpMethod.PUT,"/jouroff/**")).hasAuthority("ADMIN")
+                                .requestMatchers(antMatcher(HttpMethod.PUT,"/absence/{id}")).hasAuthority("MANAGER")
+                                .requestMatchers(antMatcher(HttpMethod.PUT,"/employe/{id}")).hasAuthority("ADMIN")
+                                .requestMatchers(antMatcher(HttpMethod.DELETE,"/employe/**")).hasAuthority("ADMIN")
+                                .requestMatchers(antMatcher(HttpMethod.DELETE,"/jouroff/**")).hasAuthority("ADMIN")
+                                .requestMatchers(antMatcher(HttpMethod.DELETE,"/departement/**")).hasAuthority("ADMIN")
+                                .requestMatchers(antMatcher(HttpMethod.POST,"/departement/**")).hasAuthority("ADMIN")
 
 
 
-                                //TODO parametrer une route POST "/jouroff" pour role ADMIN (concernant jourF et RTT)
-                                //TODO parametrer une route PUT "/absence" pour role MANAGER
                                 .anyRequest().authenticated()
                 )
                 .csrf( csrf -> csrf.disable()

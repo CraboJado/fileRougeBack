@@ -49,10 +49,10 @@ public class DepartementControl {
 
 
 
-    @RequestMapping("/delete")
-    @PostMapping
-    public ResponseEntity<?> deleteDepartement(@RequestBody int departementid){
-       departementService.deleteDepartement(departementid);
+    @RequestMapping("/{id}")
+    @DeleteMapping
+    public ResponseEntity<?> deleteDepartement(@PathVariable("id") String departementId){
+       departementService.deleteDepartement(Integer.parseInt(departementId));
         return   ResponseEntity.status(HttpStatus.CREATED).body("départemet supprimé");
     }
 

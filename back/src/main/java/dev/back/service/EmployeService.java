@@ -6,6 +6,8 @@ import dev.back.entite.JoursOff;
 import dev.back.repository.EmployeRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,4 +53,8 @@ public class EmployeService {
 
     }
 
+    public Employe getActiveUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return getEmployeByEmail(authentication.getName());
+    }
 }

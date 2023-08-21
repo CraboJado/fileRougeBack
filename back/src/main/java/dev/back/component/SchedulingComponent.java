@@ -2,6 +2,7 @@ package dev.back.component;
 
 import dev.back.entite.*;
 import dev.back.service.AbsenceService;
+import dev.back.service.EmailServiceImpl;
 import dev.back.service.EmployeService;
 import dev.back.service.JoursOffService;
 import org.springframework.http.HttpStatus;
@@ -24,10 +25,13 @@ public class SchedulingComponent {
     EmployeService employeService;
 JoursOffService joursOffService;
 
-    public SchedulingComponent(AbsenceService absenceService, EmployeService employeService, JoursOffService joursOffService) {
+EmailServiceImpl emailServiceImpl;
+
+    public SchedulingComponent(AbsenceService absenceService, EmployeService employeService, JoursOffService joursOffService, EmailServiceImpl emailService) {
         this.absenceService = absenceService;
         this.employeService = employeService;
         this.joursOffService = joursOffService;
+        this.emailServiceImpl = emailService;
     }
 
     @Scheduled(cron="0 0 0 1 1 ?")
@@ -48,51 +52,36 @@ JoursOffService joursOffService;
 
          List<Absence> absences= absenceService.listAbsences().stream().filter(absence -> absence.getStatut().equals(Statut.INITIALE)).toList();
 
+
         for(Absence absence:absences){
+            int jourOuvre=absenceService.nbJourOuvre(absence);
             int nbRTTNeeded=0;
             int nbCongeNeeded=0;
+            Employe employe = absence.getEmploye();
 
-            List<LocalDate> listeJourAbsence = absence.getDateDebut().datesUntil(absence.getDateFin().plusDays(1)).toList();
-
-
-
-
-            for(LocalDate jour : listeJourAbsence) {
-
-                if (!jour.getDayOfWeek().equals(DayOfWeek.SUNDAY) && !jour.getDayOfWeek().equals(DayOfWeek.SATURDAY)){
-
-                    List<JoursOff> jourOffs= joursOffService.listJoursOff();
-
-                    for(JoursOff joursOff:jourOffs){
-
-                        if(!jour.equals(joursOff.getJour())){
-
-                            if(absence.getTypeAbsence().equals(TypeAbsence.RTT)){
-
-                                nbRTTNeeded++;
-
-                            }
-
-
-                            if(absence.getTypeAbsence().equals(TypeAbsence.CONGE_PAYE)){
-
-                                nbCongeNeeded++;
-
-                            }
-                        }
-                    }
-                }
-            }
 
        if(absence.getEmploye().getSoldeConge()<nbCongeNeeded || absence.getEmploye().getSoldeRtt()<nbRTTNeeded){
            absence.setStatut(Statut.REJETEE);
-           //TODO envoyer un mail a l'employe.
+           emailServiceImpl.sendSimpleMail(employe.getEmail(),"Bonjour "+ employe.getFirstName()+" "+ employe.getLastName() +"\n votre demande a été refusée par le traitement de nuit","Absence Refusée automatiquement");
+
            absenceService.addAbsence(absence);
 
        }else{
            absence.setStatut(Statut.EN_ATTENTE);
-           Employe employe = absence.getEmploye();
-           //TODO envoyer un mail a l'employe.
+
+
+           if (absence.getStatut().equals(Statut.REJETEE)) {
+               if (absence.getTypeAbsence().equals(TypeAbsence.RTT)) {
+                   nbRTTNeeded = jourOuvre;
+               }
+               if (absence.getTypeAbsence().equals(TypeAbsence.CONGE_PAYE)) {
+                   nbCongeNeeded = jourOuvre;
+               }
+               employe.setSoldeConge(employe.getSoldeConge() + nbCongeNeeded);
+               employe.setSoldeRtt(employe.getSoldeRtt() + nbRTTNeeded);
+           }
+
+           emailServiceImpl.sendSimpleMail(employe.getManager().getEmail(),"la demande d'absence de "+ employe.getLastName() +" a été validée par le traitement de nuit, en attente de votre validation","Absence en attente de validation");
            absenceService.addAbsence(absence);
            employe.setSoldeRtt(employe.getSoldeRtt()-nbRTTNeeded);
            employe.setSoldeConge(employe.getSoldeConge()-nbCongeNeeded);

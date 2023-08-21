@@ -6,9 +6,12 @@ import dev.back.service.AbsenceService;
 import dev.back.service.EmailServiceImpl;
 import dev.back.service.EmployeService;
 import dev.back.service.JoursOffService;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
@@ -49,28 +52,62 @@ public class AbsenceControl {
 
     @PostMapping
     public ResponseEntity<?> addAbsence(@RequestBody AbsenceDTO absenceDTO) throws Exception {
-        //TODO regarder règle métier
+
         Employe employe = employeService.getEmployeById(absenceDTO.getEmployeId());
-        if(TypeAbsence.CONGE_SANS_SOLDE.equals(absenceDTO.getTypeAbsence())) {
-            if(Objects.equals(absenceDTO.getMotif(), "")) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("le motif est obligatoire pour un congé sans solde ");
+
+        Employe authEmploye = employeService.getActiveUser();
+
+        if (absenceDTO.getEmployeId() == authEmploye.getId()) {
+
+
+            if (TypeAbsence.CONGE_SANS_SOLDE.equals(absenceDTO.getTypeAbsence())) {
+                if (Objects.equals(absenceDTO.getMotif(), "")) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("le motif est obligatoire pour un congé sans solde ");
+                }
             }
-        }
-        Absence absence=new Absence(LocalDateTime.now(),absenceDTO.getDateDebut(),absenceDTO.getDateFin(),absenceDTO.getStatut(),absenceDTO.getTypeAbsence(),absenceDTO.getMotif(),employe);
+            Absence absence = new Absence(LocalDateTime.now(), absenceDTO.getDateDebut(), absenceDTO.getDateFin(), absenceDTO.getStatut(), absenceDTO.getTypeAbsence(), absenceDTO.getMotif(), employe);
+
+            List<JoursOff> joursOffList = joursOffService.listJoursOff();
+
+            for (JoursOff joursOff : joursOffList) {
+                if (absence.getDateDebut().isEqual(joursOff.getJour()) || absence.getDateFin().isEqual(joursOff.getJour())) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("la date de debut ou de fin ne peut pas être un jour férié ou un rtt employeur");
+                }
+            }
+
+            List<Absence> absenceList = absenceService.listAbsenceByEmploye(absence.getEmploye().getId());
+            boolean superpositionDeDate = false;
+            List<LocalDate> datesDemandes = new ArrayList<>();
+            try {
+                datesDemandes = absenceDTO.getDateDebut().datesUntil(absenceDTO.getDateFin()).toList();
+            } catch (Exception ex) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("la date de fin ne peut pas être avant celle de début ");
+            }
+
+            for (Absence absenceTempo : absenceList) {
+                List<LocalDate> datesPrises = absenceTempo.getDateDebut().datesUntil(absenceTempo.getDateFin()).toList();
+                for (LocalDate jour : datesPrises) {
+                    for (LocalDate jourDemande : datesDemandes) {
+
+                        if (jourDemande.equals(jour)) {
+                            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("vous avez déjà une demande de congé sur cette période ");
+
+                        }
+                    }
+                }
+            }
 
 
-        if(absence.getDateCreation().isAfter(absenceDTO.getDateDebut().atTime(LocalTime.now()))){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("la date de debut ne peut pas être passée ");
-        }
+            if (absence.getDateCreation().isAfter(absenceDTO.getDateDebut().atTime(LocalTime.now()))) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("la date de debut ne peut pas être passée ");
+            }
+            absence.setStatut(Statut.INITIALE);
+            absenceService.addAbsence(absence);
+            return ResponseEntity.status(HttpStatus.CREATED).body("absence créée");
 
-        if(absenceDTO.getDateFin().isBefore(absenceDTO.getDateDebut())){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("la date de fin ne peut pas être avant celle de début ");
-        }
-        absence.setStatut(Statut.INITIALE);
-        absenceService.addAbsence(absence);
-        return ResponseEntity.status(HttpStatus.CREATED).body("absence créée");
+
+        }else{ return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("vous n'êtes pas autorisé à modifier la demande d'absence de quelqu'un d'autre ");}
     }
-
 
     @RequestMapping("/employe")
     @GetMapping
@@ -102,94 +139,106 @@ public class AbsenceControl {
 
 
 
-    @PutMapping("/{id}")
+    @PutMapping("/statut/{id}")
     public ResponseEntity<?> ChangeAbsenceStatut(@RequestBody AbsenceDTO absence, @PathVariable("id") String id) {
 
-        System.out.println(id);
-
-        int absenceIdInt= Integer.parseInt(id);
-
-        Absence absence1 = absenceService.getAbsenceById(absenceIdInt);
-
-        long nombreDeJour = DAYS.between(absence.getDateDebut(), absence.getDateFin());
-
-        List<LocalDate> listeJourAbsence = absence.getDateDebut().datesUntil(absence.getDateFin().plusDays(1)).toList();
-        for (LocalDate date:listeJourAbsence){
-            System.out.println(date);
-        }
-
-        System.out.println(listeJourAbsence.size());
+        Employe authEmploye = employeService.getActiveUser();
         Employe employe = employeService.getEmployeById(absence.getEmployeId());
 
-        int nbRttNeeded=0;
-        int nbCongeNeeded=0;
+        if (authEmploye.getManager().getId() == employe.getManager().getId()) {
 
-        for(LocalDate jour : listeJourAbsence) {
+            int absenceIdInt = Integer.parseInt(id);
 
-            if (!jour.getDayOfWeek().equals(DayOfWeek.SUNDAY) && !jour.getDayOfWeek().equals(DayOfWeek.SATURDAY)){
+            Absence absence1 = absenceService.getAbsenceById(absenceIdInt);
 
-                List<JoursOff> jourOffs= joursOffService.listJoursOff();
+            int jourtotal = absenceService.nbJourOuvre(absence1);
+            System.out.println(jourtotal);
 
-                for(JoursOff joursOff:jourOffs){
-
-                    if(!jour.equals(joursOff.getJour())){
-
-                        if(absence.getTypeAbsence().equals(TypeAbsence.RTT)){
-
-                            employe.setSoldeRtt(employe.getSoldeRtt()-1);
-                            nbRttNeeded++;
-
-                        }
-
-
-                        if(absence.getTypeAbsence().equals(TypeAbsence.CONGE_PAYE)){
-
-                            employe.setSoldeRtt(employe.getSoldeConge()-1);
-                            nbCongeNeeded++;
-
-                        }
+            int nbRttNeeded = 0;
+            int nbCongeNeeded = 0;
 
 
 
-                    }
-                }
-
-
-            }
-
-
-        }
-
-
-
-
-
-        System.out.println(employe.getSoldeRtt());
 
             absence1.setStatut(absence.getStatut());
-            if(absence1.getStatut().equals(Statut.REJETEE)){
-                employe.setSoldeConge(employe.getSoldeConge()+nbCongeNeeded);
-                employe.setSoldeRtt(employe.getSoldeRtt()+nbRttNeeded);
+            if (absence1.getStatut().equals(Statut.REJETEE)) {
+                if (absence1.getTypeAbsence().equals(TypeAbsence.RTT)) {
+                    nbRttNeeded = jourtotal;
+                }
+                if (absence1.getTypeAbsence().equals(TypeAbsence.CONGE_PAYE)) {
+                    nbCongeNeeded = jourtotal;
+                }
+                System.out.println(nbRttNeeded);
+                employe.setSoldeConge(employe.getSoldeConge() + nbCongeNeeded);
+                employe.setSoldeRtt(employe.getSoldeRtt() + nbRttNeeded);
             }
-        employeService.addEmploye(employe);
-
+            employeService.addEmploye(employe);
             absenceService.addAbsence(absence1);//addabsence uses .save() so it will update it if it already exists
+            emailService.sendSimpleMail("antoine.ligerot@outlook.fr", "le statut de votre demande de congé à été modifié, veuillez vous connnecter a votre compte pour vérifier"
+                    + "\n " + "nouveau statut = " + absence.getStatut(), "le statut de votre absence à changé");
+            return ResponseEntity.status(HttpStatus.CREATED).body("statut changé");
+        }else {return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("seul le manager de cet employé peut changer le statut de son absence");}
+    }
 
 
-        emailService.sendSimpleMail("antoine.ligerot@outlook.fr","le statut de votre demande de congé à été modifié, veuillez vous connnecter a votre compte pour vérifier"
-        + "\n " + "nouveau statut = " + absence.getStatut(),"le statut de votre absence à changé" );
+    @PutMapping("/{id}")
+    public ResponseEntity<?> ChangeAbsence(@RequestBody AbsenceDTO absenceDTO, @PathVariable("id") String id) {
+
+        Employe authEmploye = employeService.getActiveUser();
+        Employe employe = employeService.getEmployeById(absenceDTO.getEmployeId());
+
+        if (authEmploye.getId() == employe.getId()) {
+
+            int absenceIdInt = Integer.parseInt(id);
+
+            Absence absence1 = absenceService.getAbsenceById(absenceIdInt);
+
+            absence1.setTypeAbsence(absenceDTO.getTypeAbsence());
+            absence1.setMotif(absenceDTO.getMotif());
+            absence1.setDateDebut(absenceDTO.getDateDebut());
+            absence1.setDateFin(absenceDTO.getDateFin());
+            absence1.setStatut(Statut.INITIALE);
+            absence1.setDateCreation(LocalDateTime.now());
+
+            absenceService.addAbsence(absence1);
 
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("statut changé");
+            return ResponseEntity.status(HttpStatus.CREATED).body("Absence modifiée");
+        }else {return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("seul l'employé peut modifier ses demandes d'absence'");}
+    }
 
+    @RequestMapping("/{id}")
+    @DeleteMapping
+    public ResponseEntity<?> deleteAbsence(@PathVariable("id") String absenceId) {
+        Employe authEmploye = employeService.getActiveUser();
+        Absence absence = absenceService.getAbsenceById(Integer.parseInt(absenceId));
+        Employe employe = absence.getEmploye();
+        if (authEmploye.getId() == employe.getId()) {
+
+            int jourTotal =absenceService.nbJourOuvre(absenceService.getAbsenceById(Integer.parseInt(absenceId)));
+            if(absence.getStatut().equals(Statut.VALIDEE)){
+                if(absence.getTypeAbsence().equals(TypeAbsence.RTT)){
+                    employe.setSoldeRtt(employe.getSoldeRtt()+jourTotal);
+                }
+                if(absence.getTypeAbsence().equals(TypeAbsence.CONGE_PAYE)){
+                    employe.setSoldeConge(employe.getSoldeConge()+jourTotal);
+                }
+
+            }
+
+
+            absenceService.deleteAbsence(Integer.parseInt(absenceId));
+            return ResponseEntity.status(HttpStatus.CREATED).body("Absence supprimé");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("seul l'employé concerné peut supprimer une demande d'absence");
 
         }
-
-    @RequestMapping("/delete")
-    @PostMapping
-    public ResponseEntity<?> deleteAbsence(@RequestBody int absenceId){
-        absenceService.deleteAbsence(absenceId);
-        return   ResponseEntity.status(HttpStatus.CREATED).body("jour officiel supprimé");
     }
+
+
+
+
+
+
 
 }

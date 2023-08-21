@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,36 +66,43 @@ public class EmployeControl {
     @RequestMapping("/newpassword/{id}")
     @PostMapping
     public ResponseEntity<?> changeEmployePassword(@RequestBody EmployeDTO employe,@PathVariable("id") String employeId){
+        Employe authEmploye = employeService.getActiveUser();
+
+        if (authEmploye.getId() == Integer.parseInt(employeId)) {
+
         String pswEncoded = passwordEncoder.encode(employe.getPassword());
-      Employe employe1= employeService.getEmployeById(Integer.parseInt(employeId));
+        Employe employe1= employeService.getEmployeById(Integer.parseInt(employeId));
         employe1.setPassword(pswEncoded);
         employeService.addEmploye(employe1);
         return   ResponseEntity.status(HttpStatus.CREATED).body("mot de passe changé");
-    }
+        }else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("vous n'êtes pas autorisé à changer le mot de passe de quelqu'un d'autre");}
+        }
 
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> testPut(@RequestBody EmployeDTO employe, @PathVariable("id") String employeId){
+    public ResponseEntity<?> testPut(@RequestBody EmployeDTO employe, @PathVariable("id") String employeId) {
 
-        Employe employe1 = employeService.getEmployeById(Integer.parseInt(employeId));
-        employe1.setFirstName(employe.getFirstName());
-        employe1.setLastName(employe.getLastName());
-        employe1.setManager(employeService.getEmployeById(employe.getManagerId()));
-        employe1.setDepartement(departementService.getDepartementById(employe.getDepartementId()));
-        employe1.setRoles(employe.getRoles());
-        employe1.setSoldeConge(employe.getSoldeConge());
-        employe1.setSoldeRtt(employe.getSoldeRtt());
-        employeService.addEmploye(employe1);
+            Employe employe1 = employeService.getEmployeById(Integer.parseInt(employeId));
+            employe1.setFirstName(employe.getFirstName());
+            employe1.setLastName(employe.getLastName());
+            employe1.setManager(employeService.getEmployeById(employe.getManagerId()));
+            employe1.setDepartement(departementService.getDepartementById(employe.getDepartementId()));
+            employe1.setRoles(employe.getRoles());
+            employe1.setSoldeConge(employe.getSoldeConge());
+            employe1.setSoldeRtt(employe.getSoldeRtt());
+            employeService.addEmploye(employe1);
 
-        return ResponseEntity.status(HttpStatus.OK).body("l'employé a été modfié");
+            return ResponseEntity.status(HttpStatus.OK).body("l'employé a été modfié");
     }
 
-    @RequestMapping("/delete")
-    @PostMapping
-    public ResponseEntity<?> deleteEmploye(@RequestBody int employeId){
-        employeService.deleteEmploye(employeId);
-        return   ResponseEntity.status(HttpStatus.CREATED).body("jour officiel supprimé");
+
+    @RequestMapping("/{id}")
+    @DeleteMapping
+    public ResponseEntity<?> deleteEmploye(@PathVariable("id") String employeId){
+        employeService.deleteEmploye(Integer.parseInt(employeId));
+        return   ResponseEntity.status(HttpStatus.OK).body("employé supprimé");
     }
 
 

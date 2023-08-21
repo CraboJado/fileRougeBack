@@ -49,10 +49,10 @@ public class JoursOffControl {
 
 
 
-    @RequestMapping("/delete")
-    @PostMapping
-    public ResponseEntity<?> deleteJourOff(@RequestBody int jourOffId){
-        joursOffService.deleteJourOff(jourOffId);
+    @RequestMapping("/{id}")
+    @DeleteMapping
+    public ResponseEntity<?> deleteJourOff(@PathVariable("id") String jourOffId){
+        joursOffService.deleteJourOff(Integer.parseInt(jourOffId));
         return   ResponseEntity.status(HttpStatus.CREATED).body("jour officiel supprimé");
     }
 
