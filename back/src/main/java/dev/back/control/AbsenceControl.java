@@ -177,7 +177,7 @@ public class AbsenceControl {
 
 
         emailService.sendSimpleMail("antoine.ligerot@outlook.fr","le statut de votre demande de congé à été modifié, veuillez vous connnecter a votre compte pour vérifier"
-        + "\n " + "nouveau statut = " + absence.getStatut() );
+        + "\n " + "nouveau statut = " + absence.getStatut(),"le statut de votre absence à changé" );
 
 
         return ResponseEntity.status(HttpStatus.CREATED).body("statut changé");

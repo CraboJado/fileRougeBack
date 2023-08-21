@@ -22,13 +22,13 @@ public class EmailServiceImpl {
 
 
 
-    public void sendSimpleMail(String destinataire, String message) {
+    public void sendSimpleMail(String destinataire, String message,String sujet) {
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(sender);
         mailMessage.setTo(destinataire);
-        mailMessage.setText("details.getMsgBody()");
-        mailMessage.setSubject("details.getSubject()");
+        mailMessage.setText(message);
+        mailMessage.setSubject(sujet);
         emailSender.send(mailMessage);
     }
 }

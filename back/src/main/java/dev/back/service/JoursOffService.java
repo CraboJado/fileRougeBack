@@ -39,8 +39,7 @@ public class JoursOffService {
 
     public void deleteJourOff(int id){joursOffRepo.delete(joursOffRepo.findById(id).orElseThrow());}
 
-
-    private JoursOffRepo jourFerieRepository; // Assume you have a repository for JourFerie
+// Assume you have a repository for JourFerie
 
     public void fetchAndSaveJoursFeries(int year) {
         RestTemplate restTemplate = new RestTemplate();
@@ -53,7 +52,7 @@ public class JoursOffService {
             jourFerie.setTypeJour(TypeJour.JOUR_FERIE);
             jourFerie.setJour(LocalDate.parse(entry.getKey()));
             jourFerie.setDescription(entry.getValue());
-            jourFerieRepository.save(jourFerie);
+            joursOffRepo.save(jourFerie);
         }
     }
 }
