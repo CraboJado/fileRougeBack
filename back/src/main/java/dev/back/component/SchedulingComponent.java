@@ -4,6 +4,8 @@ import dev.back.entite.*;
 import dev.back.service.AbsenceService;
 import dev.back.service.EmployeService;
 import dev.back.service.JoursOffService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +28,17 @@ JoursOffService joursOffService;
         this.absenceService = absenceService;
         this.employeService = employeService;
         this.joursOffService = joursOffService;
+    }
+
+    @Scheduled(cron="0 0 0 1 1 ?")
+    public void UpdateJourFerie(){
+
+        int anneeActuelle=LocalDate.now().getYear();
+        for (int i = anneeActuelle-5; i < anneeActuelle +5 ; i++) {
+            joursOffService.fetchAndSaveJoursFeries(i);
+        }
+
+
     }
 
     @Scheduled(cron="@midnight")

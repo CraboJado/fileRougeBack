@@ -59,7 +59,12 @@ public class JoursOffControl {
     @PostMapping
     @RequestMapping("/jourferie")
     public ResponseEntity<?> addJourFerie(){
-        joursOffService.fetchAndSaveJoursFeries(2023);
+        int anneeActuelle=LocalDate.now().getYear();
+        for (int i = anneeActuelle-5; i < anneeActuelle +5 ; i++) {
+            joursOffService.fetchAndSaveJoursFeries(i);
+        }
+
+
         return   ResponseEntity.status(HttpStatus.CREATED).body("les jours fériés");
 
     }

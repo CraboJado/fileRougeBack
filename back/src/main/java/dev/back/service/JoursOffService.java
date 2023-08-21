@@ -46,13 +46,19 @@ public class JoursOffService {
         String apiUrl = "https://calendrier.api.gouv.fr/jours-feries/metropole/{annee}.json";
         String apiUrlWithYear = apiUrl.replace("{annee}", String.valueOf(year));
         Map<String, String> joursFeriesData = restTemplate.getForObject(apiUrlWithYear, Map.class);
-
+        List<JoursOff> joursOffList = joursOffRepo.findAllByTypeJour(TypeJour.JOUR_FERIE);
         for (Map.Entry<String, String> entry : joursFeriesData.entrySet()) {
             JoursOff jourFerie = new JoursOff();
-            jourFerie.setTypeJour(TypeJour.JOUR_FERIE);
-            jourFerie.setJour(LocalDate.parse(entry.getKey()));
-            jourFerie.setDescription(entry.getValue());
-            joursOffRepo.save(jourFerie);
+
+            if(joursOffRepo.findByJour(LocalDate.parse(entry.getKey())).isEmpty()){
+                jourFerie.setTypeJour(TypeJour.JOUR_FERIE);
+                jourFerie.setJour(LocalDate.parse(entry.getKey()));
+                jourFerie.setDescription(entry.getValue());
+
+                joursOffRepo.save(jourFerie);
+            }
+
+
         }
     }
 }
