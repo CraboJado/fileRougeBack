@@ -2,18 +2,14 @@ package dev.back.component;
 
 import dev.back.entite.*;
 import dev.back.service.AbsenceService;
-import dev.back.service.EmailServiceImpl;
+import dev.back.service.EmailService;
 import dev.back.service.EmployeService;
 import dev.back.service.JoursOffService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Component
@@ -25,9 +21,9 @@ public class SchedulingComponent {
     EmployeService employeService;
 JoursOffService joursOffService;
 
-EmailServiceImpl emailServiceImpl;
+EmailService emailServiceImpl;
 
-    public SchedulingComponent(AbsenceService absenceService, EmployeService employeService, JoursOffService joursOffService, EmailServiceImpl emailService) {
+    public SchedulingComponent(AbsenceService absenceService, EmployeService employeService, JoursOffService joursOffService, EmailService emailService) {
         this.absenceService = absenceService;
         this.employeService = employeService;
         this.joursOffService = joursOffService;

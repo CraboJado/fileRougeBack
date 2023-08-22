@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.List;
 
+
 @Entity
 @Getter
 @Setter
@@ -30,10 +31,14 @@ public class Employe {
     @ManyToOne
     private Departement departement;
 
+
+    //chaque employé à un manager, il existe un unique superManager qui a manager=null
     @ManyToOne
     private Employe manager;
 
+
     @ElementCollection(fetch = FetchType.EAGER)
+    //role = null : juste un employé
     private List<String> roles;
 
     public Employe(String firstName, String lastName, String password, int soldeConge, int soldeRtt, String email, List<String> roles, Departement departement, Employe manager) {

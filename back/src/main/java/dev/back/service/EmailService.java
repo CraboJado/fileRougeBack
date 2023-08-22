@@ -9,15 +9,13 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class EmailServiceImpl {
-
+public class EmailService {
 
     @Value("${spring.mail.username}")
     private String sender;
 
     @Autowired
     private JavaMailSender emailSender;
-
 
     /**
      * envoie un mail avec les paramètres d'entrées

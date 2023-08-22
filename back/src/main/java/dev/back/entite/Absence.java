@@ -23,8 +23,10 @@ public class Absence {
     LocalDate dateDebut;
     LocalDate dateFin;
 
-    //TODO INITIALE DES AJOUTER
+    @Enumerated(EnumType.STRING)
     Statut statut ;
+
+    @Enumerated(EnumType.STRING)
     TypeAbsence typeAbsence;
 
     String motif="";
@@ -100,7 +102,7 @@ public class Absence {
         this.dateCreation = dateCreation;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
-        this.statut = statut;
+        this.statut = Statut.INITIALE;
         this.typeAbsence = typeAbsence;
         this.motif = motif;
         this.employe = employe;

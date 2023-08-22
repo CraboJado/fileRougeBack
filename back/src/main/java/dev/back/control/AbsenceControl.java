@@ -3,15 +3,11 @@ package dev.back.control;
 import dev.back.DTO.AbsenceDTO;
 import dev.back.entite.*;
 import dev.back.service.AbsenceService;
-import dev.back.service.EmailServiceImpl;
+import dev.back.service.EmailService;
 import dev.back.service.EmployeService;
 import dev.back.service.JoursOffService;
-import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
@@ -19,12 +15,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-
-import static java.time.temporal.ChronoUnit.DAYS;
 
 @CrossOrigin
 @RestController
@@ -35,11 +27,11 @@ public class AbsenceControl {
 
     JoursOffService joursOffService;
 
-    EmailServiceImpl emailService;
+    EmailService emailService;
 
 
 
-    public AbsenceControl(AbsenceService absenceService, EmployeService employeService, JoursOffService joursOffService, EmailServiceImpl emailService) {
+    public AbsenceControl(AbsenceService absenceService, EmployeService employeService, JoursOffService joursOffService, EmailService emailService) {
         this.absenceService = absenceService;
         this.employeService = employeService;
         this.joursOffService = joursOffService;
@@ -92,17 +84,25 @@ public class AbsenceControl {
                 }
             }
 
+            if(absenceDTO.getDateDebut().getDayOfWeek() == DayOfWeek.SATURDAY
+                    || absenceDTO.getDateDebut().getDayOfWeek() == DayOfWeek.SUNDAY
+                    ||absenceDTO.getDateFin().getDayOfWeek() == DayOfWeek.SATURDAY
+                    || absenceDTO.getDateFin().getDayOfWeek() == DayOfWeek.SUNDAY ){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("la date de début ou de fin ne peut pas être en weekend ");
+            }
+
             List<Absence> absenceList = absenceService.listAbsenceByEmploye(absence.getEmploye().getId());
             boolean superpositionDeDate = false;
             List<LocalDate> datesDemandes = new ArrayList<>();
             try {
-                datesDemandes = absenceDTO.getDateDebut().datesUntil(absenceDTO.getDateFin()).toList();
+                datesDemandes = absenceDTO.getDateDebut().datesUntil(absenceDTO.getDateFin().plusDays(1)).toList();
             } catch (Exception ex) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("la date de fin ne peut pas être avant celle de début ");
             }
 
             for (Absence absenceTempo : absenceList) {
-                List<LocalDate> datesPrises = absenceTempo.getDateDebut().datesUntil(absenceTempo.getDateFin()).toList();
+                List<LocalDate> datesPrises = absenceTempo.getDateDebut().datesUntil(absenceTempo.getDateFin().plusDays(1)).toList();
                 for (LocalDate jour : datesPrises) {
                     for (LocalDate jourDemande : datesDemandes) {
 
@@ -123,7 +123,7 @@ public class AbsenceControl {
             return ResponseEntity.status(HttpStatus.CREATED).body("absence créée");
 
 
-        }else{ return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("vous n'êtes pas autorisé à modifier la demande d'absence de quelqu'un d'autre ");}
+        }else{ return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("vous n'êtes pas autorisé à créer une demande d'absence pour quelqu'un d'autre ");}
     }
 
     /**
@@ -211,7 +211,11 @@ public class AbsenceControl {
                 employe.setSoldeRtt(employe.getSoldeRtt() + nbRttNeeded);
             }
             employeService.addEmploye(employe);
-            absenceService.addAbsence(absence1);//addabsence uses .save() so it will update it if it already exists
+            absenceService.addAbsence(absence1);
+
+
+
+
             emailService.sendSimpleMail(employe.getEmail(), "le statut de votre demande de congé à été modifié, veuillez vous connnecter a votre compte pour vérifier"
                     + "\n " + "nouveau statut = " + absence.getStatut(), "le statut de votre absence à changé");
             return ResponseEntity.status(HttpStatus.OK).body("statut changé");

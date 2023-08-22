@@ -10,6 +10,11 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
+
+/**
+ * Entite qui représente les jours de congé obligatoire fournit par l'employeur ou pas l'état
+ */
+
 @Entity
 @Getter
 @Setter

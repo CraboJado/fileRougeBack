@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.validation.annotation.Validated;
 
+/**
+ * les différents départements de l'etreprise
+ */
 @Entity
 @Getter
 @Setter
