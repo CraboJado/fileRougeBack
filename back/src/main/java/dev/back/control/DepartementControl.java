@@ -24,11 +24,23 @@ public class DepartementControl {
         this.departementService = departementService;
     }
 
+
+    /**
+     *
+     * @return liste de tous les departements de l'entrprise
+     */
     @GetMapping
     public List<Departement> listAll(){
        return departementService.listDepartements();
     }
 
+
+    /**
+     * permet de creer de departements dans l'entreprise, seul un admin connecté est autorisé.
+     *
+     * @param departementDTO
+     * @return ResponseEntity created - 201
+     */
     @PostMapping
     public ResponseEntity<?> addDepartement(@RequestBody DepartementDTO departementDTO){
         Departement departement= new Departement(departementDTO.getName());
@@ -36,24 +48,34 @@ public class DepartementControl {
         return   ResponseEntity.status(HttpStatus.CREATED).body("departement créé");
     }
 
-
+    /**
+     * permet de changer le nom d'un departement dans l'entreprise, seul un admin connecté est autorisé.
+     *
+     * @param departement
+     * @return ResponseEntity ok - 200
+     */
     @PutMapping
     public ResponseEntity<?>  ChangeDepartement(@RequestBody Departement departement) {
         Departement departement1= departementService.getDepartementById(departement.getId());
         departement1.setName(departement.getName());
         departementService.addDepartement(departement);
-        return   ResponseEntity.status(HttpStatus.CREATED).body("département modifié");
+        return   ResponseEntity.status(HttpStatus.OK).body("département modifié");
 
   }
 
 
+    /**
+     * permet de supprimer un departement dans l'entreprise, seul un admin connecté est autorisé.
+     *
+     * @param departementId
+     * @return ResponseEntity ok - 200
+     */
 
-
-    @RequestMapping("/delete")
-    @PostMapping
-    public ResponseEntity<?> deleteDepartement(@RequestBody int departementid){
-       departementService.deleteDepartement(departementid);
-        return   ResponseEntity.status(HttpStatus.CREATED).body("départemet supprimé");
+    @RequestMapping("/{id}")
+    @DeleteMapping
+    public ResponseEntity<?> deleteDepartement(@PathVariable("id") String departementId){
+       departementService.deleteDepartement(Integer.parseInt(departementId));
+        return   ResponseEntity.status(HttpStatus.OK).body("départemet supprimé");
     }
 
 }

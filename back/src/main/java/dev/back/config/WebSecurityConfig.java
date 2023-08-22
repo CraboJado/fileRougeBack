@@ -24,19 +24,35 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
+
+
+    /**
+     * méthode qui gère l'authentification
+     *
+     * @param http
+     * @param jwtFilter
+     * @param jwtConfig
+     * @return
+     * @throws Exception
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JWTAuthorizationFilter jwtFilter, JWTConfig jwtConfig) throws Exception {
 
         http.authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers(antMatcher(HttpMethod.POST,"/sessions")).permitAll()
-                                .requestMatchers(antMatcher(HttpMethod.POST,"/employe")).permitAll()
-                                .requestMatchers(antMatcher(HttpMethod.POST,"jouroff/**")).hasAuthority("ADMIN")
+                                .requestMatchers(antMatcher(HttpMethod.POST,"/employe")).hasAuthority("ADMIN")
+                                .requestMatchers(antMatcher(HttpMethod.POST,"/jouroff/**")).hasAuthority("ADMIN")
+                                .requestMatchers(antMatcher(HttpMethod.PUT,"/jouroff/**")).hasAuthority("ADMIN")
+                                .requestMatchers(antMatcher(HttpMethod.PUT,"/absence/{id}")).hasAuthority("MANAGER")
+                                .requestMatchers(antMatcher(HttpMethod.PUT,"/employe/{id}")).hasAuthority("ADMIN")
+                                .requestMatchers(antMatcher(HttpMethod.DELETE,"/employe/**")).hasAuthority("ADMIN")
+                                .requestMatchers(antMatcher(HttpMethod.DELETE,"/jouroff/**")).hasAuthority("ADMIN")
+                                .requestMatchers(antMatcher(HttpMethod.DELETE,"/departement/**")).hasAuthority("ADMIN")
+                                .requestMatchers(antMatcher(HttpMethod.POST,"/departement/**")).hasAuthority("ADMIN")
 
 
 
-                                //TODO parametrer une route POST "/jouroff" pour role ADMIN (concernant jourF et RTT)
-                                //TODO parametrer une route PUT "/absence" pour role MANAGER
                                 .anyRequest().authenticated()
                 )
                 .csrf( csrf -> csrf.disable()
@@ -57,6 +73,12 @@ public class WebSecurityConfig {
 
         return http.build();
     }
+
+    /**
+     * nous permet d'encoder le mot de passe de l'employe
+     *
+     * @return mot de pass encodé
+     */
     @Bean
     public PasswordEncoder passwordEncoder(){
         String encodingId = "bcrypt";

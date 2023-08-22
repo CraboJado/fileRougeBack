@@ -6,6 +6,15 @@ POST localhost:8080/sessions
 Content-Type: application/json
 
 {
+  "email" : "passwordmanager@hotmail.fr",
+  "password": "passwordmanager"
+}
+
+###
+POST localhost:8080/sessions
+Content-Type: application/json
+
+{
   "email" : "password2@hotmail.fr",
   "password": "password2"
 }
@@ -17,13 +26,13 @@ Content-Type: application/json
 {
     "firstName" : "u11",
     "lastName" : "pass11",
-    "password" : "passwordT",
+    "password" : "passwordmanager",
     "soldeConge" : 10,
     "soldeRtt" : 10,
-    "email" : "passwordT@hotmail.fr",
+    "email" : "passwordmanager@hotmail.fr",
     "roles" : ["MANAGER"],
     "departementId" : 1,
-    "managerId": 5
+    "managerId": 1
 
 }
 
@@ -37,16 +46,16 @@ Content-Type: application/json
 }
 
 ###
-PUT localhost:8080/absence/1
+PUT localhost:8080/absence/statut/9
 Content-Type: application/json
 
 {
   "dateDebut" : "2023-08-10",
   "dateFin" : "2023-08-13",
-  "statut" : 1,
+  "statut" : "REJETEE",
   "typeAbsence" : "RTT",
   "motif": "",
-  "employeId" : 1
+  "employeId" : 2
 }
 
 ###
@@ -105,3 +114,25 @@ GET https://calendrier.api.gouv.fr/jours-feries/metropole/2023.json
 ###
 
 POST localhost:8080/jouroff/jourferie
+
+###
+DELETE localhost:8080/employe/delete/3
+###
+POST localhost:8080/absence
+Content-Type: application/json
+
+{
+  "dateDebut" : "2025-06-13",
+  "dateFin" : "2025-06-30",
+  "statut" : 1,
+  "typeAbsence" : "RTT",
+  "motif": "tetestests",
+  "employeId" : 2
+}
+
+
+###
+DELETE localhost:8080/absence/5
+Content-Type: application/json
+
+
