@@ -1,8 +1,9 @@
 package dev.back.control;
 
 import dev.back.DTO.JourOffDTO;
-import dev.back.entite.JoursOff;
-import dev.back.entite.TypeJour;
+import dev.back.entite.*;
+import dev.back.service.AbsenceService;
+import dev.back.service.EmployeService;
 import dev.back.service.JoursOffService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @CrossOrigin
@@ -19,8 +21,14 @@ public class JoursOffControl {
 
     JoursOffService joursOffService;
 
-    public JoursOffControl(JoursOffService joursOffService) {
+    AbsenceService absenceService;
+
+    EmployeService employeService;
+
+    public JoursOffControl(JoursOffService joursOffService, AbsenceService absenceService, EmployeService employeService) {
         this.joursOffService = joursOffService;
+        this.absenceService = absenceService;
+        this.employeService = employeService;
     }
 
     @GetMapping
@@ -43,6 +51,20 @@ public class JoursOffControl {
         //TODO Verifier le role user
         JoursOff joursOff = new JoursOff(jourOffDTO.getJour(),jourOffDTO.getTypeJour(),jourOffDTO.getDescription());
         joursOffService.addJourOff(joursOff);
+        if(joursOff.getTypeJour().equals(TypeJour.RTT_EMPLOYEUR)){
+
+            for(Employe employe:employeService.listEmployes()) {
+                absenceService.addAbsence(new Absence(
+                        LocalDateTime.now(),
+                        jourOffDTO.getJour(),
+                        jourOffDTO.getJour(),
+                        Statut.INITIALE,
+                        TypeAbsence.RTT_EMPLOYEUR,
+                        jourOffDTO.getDescription(),
+                        employe
+                ));
+                }
+        }
         return   ResponseEntity.status(HttpStatus.CREATED).body("jour officiel créé");
     }
 
@@ -74,6 +96,20 @@ public class JoursOffControl {
     @RequestMapping("/{id}")
     @DeleteMapping
     public ResponseEntity<?> deleteJourOff(@PathVariable("id") String jourOffId){
+        JoursOff joursOff=joursOffService.jourOffById(Integer.parseInt(jourOffId));
+
+        //si un RTT_employeur est supprimé et que les absences etaient validée,
+        //il faut rendre le RTT decompté au salarié
+
+        if(joursOff.getTypeJour().equals(TypeJour.RTT_EMPLOYEUR)){
+         for(Absence absence:  absenceService.getAbsenceByDate(joursOff.getJour())){
+             if(absence.getStatut().equals(Statut.VALIDEE) && absence.getTypeAbsence().equals(TypeAbsence.RTT_EMPLOYEUR)){
+                 Employe employe=absence.getEmploye();
+                 employe.setSoldeRtt(employe.getSoldeRtt()+1);
+             }
+            }
+        }
+
         joursOffService.deleteJourOff(Integer.parseInt(jourOffId));
         return   ResponseEntity.status(HttpStatus.OK).body("jour officiel supprimé");
     }

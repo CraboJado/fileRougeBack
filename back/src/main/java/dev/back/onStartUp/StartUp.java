@@ -36,6 +36,10 @@ public class StartUp{
         this.passwordEncoder = passwordEncoder;
     }
 
+
+    /**
+     * on rajoute des objets dans notre base de donnée au démarrage
+     */
     @EventListener(ContextRefreshedEvent.class)
     public void init() {
 

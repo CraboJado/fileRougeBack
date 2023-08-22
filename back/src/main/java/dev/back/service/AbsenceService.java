@@ -38,13 +38,24 @@ public class AbsenceService {
     public List<Absence> listAbsenceByEmploye(int id){
         return absenceRepo.getAbsenceByEmploye_Id(id);
     }
-    public List<Absence> listAbsenceByEmployeDepartement(int id){
-        return absenceRepo.getAbsenceByEmploye_Departement_Id(id);
+
+
+    /**
+     *
+     * @param departementId
+     * @return List d'absence de tout un departement
+     */
+    public List<Absence> listAbsenceByEmployeDepartement(int departementId){
+        return absenceRepo.getAbsenceByEmploye_Departement_Id(departementId);
     }
 
     public Absence getAbsenceById(Integer id){
         Optional<Absence> absenceOp = absenceRepo.findById(id);
         return  absenceOp.orElseThrow();
+    }
+
+    public List<Absence> getAbsenceByDate(LocalDate date){
+       return absenceRepo.getAbsenceByDateDebutAndDateFin(date,date);
     }
 
 

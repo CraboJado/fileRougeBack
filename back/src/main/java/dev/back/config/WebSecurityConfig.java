@@ -50,8 +50,8 @@ public class WebSecurityConfig {
                                 .requestMatchers(antMatcher(HttpMethod.DELETE,"/jouroff/**")).hasAuthority("ADMIN")
                                 .requestMatchers(antMatcher(HttpMethod.DELETE,"/departement/**")).hasAuthority("ADMIN")
                                 .requestMatchers(antMatcher(HttpMethod.POST,"/departement/**")).hasAuthority("ADMIN")
-
-
+                                .requestMatchers(antMatcher(HttpMethod.GET,"/absence")).hasAuthority("ADMIN")
+                                .requestMatchers(antMatcher(HttpMethod.GET,"/employe")).hasAnyAuthority("ADMIN","MANAGER")
 
                                 .anyRequest().authenticated()
                 )

@@ -21,11 +21,12 @@ public class Employe {
     private String firstName;
     private String lastName;
     private String password;
-
     private int soldeConge;
     private int soldeRtt;
 
     @Email
+    @Column(unique = true)
+    //un email ne peut être utilisé que par un seul employé
     private String email;
 
     @ManyToOne

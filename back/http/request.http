@@ -1,24 +1,17 @@
 
 
-
+n'importe qui est autorisé
 ###
 POST localhost:8080/sessions
 Content-Type: application/json
 
 {
-  "email" : "passwordmanager@hotmail.fr",
-  "password": "passwordmanager"
+  "email" : "exampleemploye@gmail.com",
+  "password": "passwordemploye"
 }
 
 ###
-POST localhost:8080/sessions
-Content-Type: application/json
-
-{
-  "email" : "password2@hotmail.fr",
-  "password": "password2"
-}
-
+uniquement un admin est autorisé
 ###
 POST localhost:8080/employe
 Content-Type: application/json
@@ -46,6 +39,8 @@ Content-Type: application/json
 }
 
 ###
+uniquement le manager de l'employé d'id 2
+###
 PUT localhost:8080/absence/statut/9
 Content-Type: application/json
 
@@ -58,6 +53,8 @@ Content-Type: application/json
   "employeId" : 2
 }
 
+###
+uniquement un admin est autorisé
 ###
 PUT localhost:8080/jouroff
 Content-Type: application/json
@@ -72,7 +69,7 @@ Content-Type: application/json
 ###
 
 ###
-
+uniquement l'employé d'id 1
 ###
 
 PUT localhost:8080/employe/newpassword/1
@@ -95,28 +92,12 @@ Content-Type: application/json
 
 POST localhost:8080/logout
 Content-Type: application/json
-
 ###
-GET localhost:8080/jouroff
-
-
-###
-POST localhost:8080/email
-Content-Type: application/json
-
-{
-  "email": "antoine.ligerot@outlook.fr",
-  "content": "test bonjour"
-}
-
-###
-GET https://calendrier.api.gouv.fr/jours-feries/metropole/2023.json
-###
-
-POST localhost:8080/jouroff/jourferie
-
+uniquement un admin est autorisé
 ###
 DELETE localhost:8080/employe/delete/3
+###
+uniquement l'employé d'id 6
 ###
 POST localhost:8080/absence
 Content-Type: application/json
@@ -135,4 +116,6 @@ Content-Type: application/json
 DELETE localhost:8080/absence/5
 Content-Type: application/json
 
+###
+GET localhost:8080/employe
 

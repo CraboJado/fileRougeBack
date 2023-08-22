@@ -23,9 +23,7 @@ public class EmployeService {
 
 
     public Employe getEmployeById(Integer id){
-        Optional<Employe> EmployeOp = employeRepo.findById(id);
-        return EmployeOp.orElse(null);
-
+        return employeRepo.findById(id).orElseThrow();
     }
 
 

@@ -12,7 +12,8 @@ import java.time.LocalDate;
 
 
 /**
- * Entite qui représente les jours de congé obligatoire fournit par l'employeur ou pas l'état
+ * Entite qui représente les jours de RTT obligatoire fournit par l'employeur
+ * et les jours fériés fournit par l'état
  */
 
 @Entity

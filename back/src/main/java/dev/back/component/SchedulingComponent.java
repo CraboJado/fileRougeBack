@@ -60,40 +60,50 @@ EmailService emailServiceImpl;
          List<Absence> absences= absenceService.listAbsences().stream().filter(absence -> absence.getStatut().equals(Statut.INITIALE)).toList();
 
 
-        for(Absence absence:absences){
-            int jourOuvre=absenceService.nbJourOuvre(absence);
-            int nbRTTNeeded=0;
-            int nbCongeNeeded=0;
-            Employe employe = absence.getEmploye();
+
+        for(Absence absence:absences) {
+            if (!absence.getTypeAbsence().equals(TypeAbsence.RTT_EMPLOYEUR)) {
 
 
-       if(absence.getEmploye().getSoldeConge()<nbCongeNeeded || absence.getEmploye().getSoldeRtt()<nbRTTNeeded){
-           absence.setStatut(Statut.REJETEE);
-           emailServiceImpl.sendSimpleMail(employe.getEmail(),"Bonjour "+ employe.getFirstName()+" "+ employe.getLastName() +"\n votre demande a été refusée par le traitement de nuit","Absence Refusée automatiquement");
-
-           absenceService.addAbsence(absence);
-
-       }else{
-           absence.setStatut(Statut.EN_ATTENTE);
+                int jourOuvre = absenceService.nbJourOuvre(absence);
+                int nbRTTNeeded = 0;
+                int nbCongeNeeded = 0;
+                Employe employe = absence.getEmploye();
 
 
-           if (absence.getStatut().equals(Statut.REJETEE)) {
-               if (absence.getTypeAbsence().equals(TypeAbsence.RTT)) {
-                   nbRTTNeeded = jourOuvre;
+                if ((absence.getEmploye().getSoldeConge() < jourOuvre && absence.getTypeAbsence().equals(TypeAbsence.CONGE_PAYE)) || (absence.getEmploye().getSoldeRtt() < jourOuvre && absence.getTypeAbsence().equals(TypeAbsence.RTT))) {
+                    absence.setStatut(Statut.REJETEE);
+                    emailServiceImpl.sendSimpleMail(employe.getEmail(), "Bonjour " + employe.getFirstName() + " " + employe.getLastName() + "\n votre demande a été refusée par le traitement de nuit", "Absence Refusée automatiquement");
+
+                    absenceService.addAbsence(absence);
+
+                } else {
+                    absence.setStatut(Statut.EN_ATTENTE);
+
+
+                    if (absence.getStatut().equals(Statut.REJETEE)) {
+                        if (absence.getTypeAbsence().equals(TypeAbsence.RTT)) {
+                            nbRTTNeeded = jourOuvre;
+                        }
+                        if (absence.getTypeAbsence().equals(TypeAbsence.CONGE_PAYE)) {
+                            nbCongeNeeded = jourOuvre;
+                        }
+                        employe.setSoldeConge(employe.getSoldeConge() + nbCongeNeeded);
+                        employe.setSoldeRtt(employe.getSoldeRtt() + nbRTTNeeded);
+                    }
+
+                    emailServiceImpl.sendSimpleMail(employe.getManager().getEmail(), "la demande d'absence de " + employe.getLastName() + " a été validée par le traitement de nuit, en attente de votre validation", "Absence en attente de validation");
+                    absenceService.addAbsence(absence);
+                    employe.setSoldeRtt(employe.getSoldeRtt() - nbRTTNeeded);
+                    employe.setSoldeConge(employe.getSoldeConge() - nbCongeNeeded);
+                    employeService.addEmploye(employe);
+                }
+            }else{
+                absence.setStatut(Statut.VALIDEE);
+
+                 absence.getEmploye().setSoldeRtt(absence.getEmploye().getSoldeRtt()-1);
                }
-               if (absence.getTypeAbsence().equals(TypeAbsence.CONGE_PAYE)) {
-                   nbCongeNeeded = jourOuvre;
-               }
-               employe.setSoldeConge(employe.getSoldeConge() + nbCongeNeeded);
-               employe.setSoldeRtt(employe.getSoldeRtt() + nbRTTNeeded);
-           }
-
-           emailServiceImpl.sendSimpleMail(employe.getManager().getEmail(),"la demande d'absence de "+ employe.getLastName() +" a été validée par le traitement de nuit, en attente de votre validation","Absence en attente de validation");
-           absenceService.addAbsence(absence);
-           employe.setSoldeRtt(employe.getSoldeRtt()-nbRTTNeeded);
-           employe.setSoldeConge(employe.getSoldeConge()-nbCongeNeeded);
-           employeService.addEmploye(employe);
             }
         }
-    }
+
 }
