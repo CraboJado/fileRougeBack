@@ -6,96 +6,19 @@ POST localhost:8080/sessions
 Content-Type: application/json
 
 {
-  "email" : "exampleemploye@gmail.com",
-  "password": "passwordemploye"
-}
-
-###
-uniquement un admin est autorisé
-###
-POST localhost:8080/employe
-Content-Type: application/json
-
-{
-    "firstName" : "u11",
-    "lastName" : "pass11",
-    "password" : "passwordmanager",
-    "soldeConge" : 10,
-    "soldeRtt" : 10,
-    "email" : "passwordmanager@hotmail.fr",
-    "roles" : ["MANAGER"],
-    "departementId" : 1,
-    "managerId": 1
-
+  "email" : "exampletout@gmail.com",
+  "password": "passwordtout"
 }
 
 
 ###
 POST localhost:8080/departement
+
 Content-Type: application/json
 
 {
   "name" : "departementTest"
 }
-
-###
-uniquement le manager de l'employé d'id 2
-###
-PUT localhost:8080/absence/statut/9
-Content-Type: application/json
-
-{
-  "dateDebut" : "2023-08-10",
-  "dateFin" : "2023-08-13",
-  "statut" : "REJETEE",
-  "typeAbsence" : "RTT",
-  "motif": "",
-  "employeId" : 2
-}
-
-###
-uniquement un admin est autorisé
-###
-PUT localhost:8080/jouroff
-Content-Type: application/json
-
-{
-  "id" : 1,
-  "jour" : "2023-08-24",
-  "typeJour": "RTT_EMPLOYEUR",
-  "description" : "vac"
-}
-
-###
-
-###
-uniquement l'employé d'id 1
-###
-
-PUT localhost:8080/employe/newpassword/1
-Content-Type: application/json
-
-{
-"firstName" : "te",
-"lastName" : "teteet",
-"soldeConge" : 1,
-"soldeRtt" : 1,
-"email" : "passwordm@hotmail.fr",
-"roles" : ["MANAGER"],
-"departementId" : 1,
-"managerId": 5,
-  "password": "6666666666666666"
-}
-
-
-###
-
-POST localhost:8080/logout
-Content-Type: application/json
-###
-uniquement un admin est autorisé
-###
-DELETE localhost:8080/employe/delete/3
 ###
 uniquement l'employé d'id 6
 ###
@@ -114,8 +37,100 @@ Content-Type: application/json
 
 ###
 DELETE localhost:8080/absence/5
+
 Content-Type: application/json
+###
+uniquement le manager de l'employé d'id 2
+###
+PUT localhost:8080/absence/statut/9
+
+Content-Type: application/json
+
+{
+  "dateDebut" : "2023-08-10",
+  "dateFin" : "2023-08-13",
+  "statut" : "REJETEE",
+  "typeAbsence" : "RTT",
+  "motif": "",
+  "employeId" : 2
+}
+
+###
+
+
+###
+
+###
+uniquement l'employé d'id 1
+###
+
+PUT localhost:8080/employe/newpassword/1
+
+Content-Type: application/json
+
+{
+"firstName" : "te",
+"lastName" : "teteet",
+"soldeConge" : 1,
+"soldeRtt" : 1,
+"email" : "passwordm@hotmail.fr",
+"roles" : ["MANAGER"],
+"departementId" : 1,
+"managerId": 5,
+  "password": "6666666666666666"
+}
+
+
+
+###
+uniquement un admin est autorisé
+###
+DELETE localhost:8080/employe/delete/3
+
+
 
 ###
 GET localhost:8080/employe
 
+
+###
+uniquement un admin est autorisé
+###
+POST localhost:8080/employe
+Content-Type: application/json
+
+{
+  "firstName" : "u11",
+  "lastName" : "pass11",
+  "password" : "passwordmanager",
+  "soldeConge" : 10,
+  "soldeRtt" : 10,
+  "email" : "passwordmanager@hotmail.fr",
+  "roles" : ["MANAGER"],
+  "departementId" : 1,
+  "managerId": 1
+
+}
+
+
+###
+
+uniquement un admin est autorisé
+###
+PUT localhost:8080/jouroff
+
+Content-Type: application/json
+
+{
+  "id" : 1,
+  "jour" : "2023-08-24",
+  "typeJour": "RTT_EMPLOYEUR",
+  "description" : "vac"
+}
+
+###
+###
+
+POST localhost:8080/logout
+
+Content-Type: application/json

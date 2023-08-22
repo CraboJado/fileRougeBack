@@ -40,3 +40,7 @@ le mot de passe des employés ajouté en base au démarrage est leur firstName
 
 une fois authentifié, vous êtes autorisé à faire certaines requètes en fonction de vos roles.
 (voir config/WebSecurityConfig pour le détail)
+
+
+# routes
+voir requeest.http pour des exemples
