@@ -19,9 +19,14 @@ public class EmailServiceImpl {
     private JavaMailSender emailSender;
 
 
-
-
-
+    /**
+     * envoie un mail avec les paramètres d'entrées
+     *
+     *
+     * @param destinataire
+     * @param message
+     * @param sujet
+     */
     public void sendSimpleMail(String destinataire, String message,String sujet) {
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();

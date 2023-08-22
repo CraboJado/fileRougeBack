@@ -34,6 +34,10 @@ EmailServiceImpl emailServiceImpl;
         this.emailServiceImpl = emailService;
     }
 
+    /**
+     * une fois par an le 1er janvier, cette méthode update les jours ferié de la base dedonnée
+     * en fonction de l'api du gouvernement
+     */
     @Scheduled(cron="0 0 0 1 1 ?")
     public void UpdateJourFerie(){
 
@@ -44,6 +48,13 @@ EmailServiceImpl emailServiceImpl;
 
 
     }
+
+
+    /**
+     * tous les jours à minuit, le traitement de nuit vérifie que la demande d'absence est valide
+     * et en change le statut de initiale a En_Attente,
+     * un mail est ensuite envoyé au manager pour la validation
+     */
 
     @Scheduled(cron="@midnight")
     public void TraitementDeNuit(){

@@ -28,6 +28,16 @@ public class JoursOffControl {
         return joursOffService.listJoursOff();
     }
 
+
+    /**
+     * permet à un admin de créer des jourFerié ou des RTT_employeur
+     *
+     * @param jourOffDTO
+     * @return ResponseEntity
+     *                     created - 201
+     */
+
+
     @PostMapping()
     public ResponseEntity<?> addJourOff(@RequestBody JourOffDTO jourOffDTO) {
         //TODO Verifier le role user
@@ -37,6 +47,13 @@ public class JoursOffControl {
     }
 
 
+    /**
+     * permet à un admin de changer un jourOff
+     *
+     * @param joursOff
+     * @return ResponseEntity
+     *                  ok - 200
+     */
     @PutMapping
     public ResponseEntity<?> changeJourOffDate(@RequestBody JoursOff joursOff){
         JoursOff joursOff1=joursOffService.jourOffById(joursOff.getId());
@@ -44,18 +61,32 @@ public class JoursOffControl {
         joursOff1.setTypeJour(joursOff.getTypeJour());
         joursOff1.setDescription(joursOff.getDescription());
         joursOffService.addJourOff(joursOff1);
-        return   ResponseEntity.status(HttpStatus.CREATED).body("date changée");
+        return   ResponseEntity.status(HttpStatus.OK).body("date changée");
     }
 
 
-
+    /**
+     * permet à un admin de supprimer un jourOff
+     *
+     * @param jourOffId
+     * @return ResponseEntity  ok - 200
+     */
     @RequestMapping("/{id}")
     @DeleteMapping
     public ResponseEntity<?> deleteJourOff(@PathVariable("id") String jourOffId){
         joursOffService.deleteJourOff(Integer.parseInt(jourOffId));
-        return   ResponseEntity.status(HttpStatus.CREATED).body("jour officiel supprimé");
+        return   ResponseEntity.status(HttpStatus.OK).body("jour officiel supprimé");
     }
 
+
+    /**
+     * fais appel à l'api du gouvernement pour récuperer les joursferiés officiels.
+     * récupère les 5 années précédentes et les 5 années suivantes
+     * si il existe déjà un jourOFF à cette date, rien n'est fait.
+     * voir schedulingcomponent
+     *
+     * @return ResponseEntity  created - 201
+     */
     @PostMapping
     @RequestMapping("/jourferie")
     public ResponseEntity<?> addJourFerie(){

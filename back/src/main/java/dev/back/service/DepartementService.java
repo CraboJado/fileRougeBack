@@ -23,16 +23,17 @@ public class DepartementService {
 
 
     public Departement getDepartementById(Integer id){
-        Optional<Departement> dptOp = departementRepo.findById(id);
-        if(dptOp.isPresent()) return dptOp.get();
-            // else throw new Exception()
-        else return null;
+       return departementRepo.findById(id).orElseThrow();
 
     }
 
     public void deleteDepartement(int id){departementRepo.delete(departementRepo.findById(id).orElseThrow());}
 
 
+    /**
+     * utilise .save donc permet de créer ET de modifier
+     * @param departement
+     */
     @Transactional
     public void addDepartement(Departement departement) {
         departementRepo.save(departement);

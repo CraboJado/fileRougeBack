@@ -23,6 +23,8 @@ public class JWTConfig {
 
     private Key secretKey;
 
+
+
     @PostConstruct
     public void buildKey(){
         secretKey = new SecretKeySpec( Base64.getDecoder().decode(getSecret()) ,

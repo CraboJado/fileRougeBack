@@ -24,6 +24,17 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
+
+
+    /**
+     * méthode qui gère l'authentification
+     *
+     * @param http
+     * @param jwtFilter
+     * @param jwtConfig
+     * @return
+     * @throws Exception
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JWTAuthorizationFilter jwtFilter, JWTConfig jwtConfig) throws Exception {
 
@@ -62,6 +73,12 @@ public class WebSecurityConfig {
 
         return http.build();
     }
+
+    /**
+     * nous permet d'encoder le mot de passe de l'employe
+     *
+     * @return mot de pass encodé
+     */
     @Bean
     public PasswordEncoder passwordEncoder(){
         String encodingId = "bcrypt";

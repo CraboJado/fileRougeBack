@@ -28,6 +28,11 @@ public class JoursOffService {
         return  joursOffRepo.findByJour(jour).orElseThrow();
     }
 
+
+    /**
+     * utilise .save donc permet de créer ET de modifier
+     * @param joursOff
+     */
     @Transactional
     public void addJourOff(JoursOff joursOff) {
         joursOffRepo.save(joursOff);
@@ -39,10 +44,19 @@ public class JoursOffService {
 
     public void deleteJourOff(int id){joursOffRepo.delete(joursOffRepo.findById(id).orElseThrow());}
 
-// Assume you have a repository for JourFerie
 
+
+    /**
+     * utilise l'api du gouvernement pour ajouter les jours fériés
+     * pour la métropole est pour une année donnée en base de donnée
+     * s'il existe déja quelque chose à cette date, rien n'est ajouté.
+     *
+     * @param year
+     */
     public void fetchAndSaveJoursFeries(int year) {
         RestTemplate restTemplate = new RestTemplate();
+
+        //on suppose que tous nos employés sont en france metropolitaine
         String apiUrl = "https://calendrier.api.gouv.fr/jours-feries/metropole/{annee}.json";
         String apiUrlWithYear = apiUrl.replace("{annee}", String.valueOf(year));
         Map<String, String> joursFeriesData = restTemplate.getForObject(apiUrlWithYear, Map.class);

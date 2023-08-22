@@ -37,6 +37,8 @@ public class AbsenceControl {
 
     EmailServiceImpl emailService;
 
+
+
     public AbsenceControl(AbsenceService absenceService, EmployeService employeService, JoursOffService joursOffService, EmailServiceImpl emailService) {
         this.absenceService = absenceService;
         this.employeService = employeService;
@@ -44,12 +46,27 @@ public class AbsenceControl {
         this.emailService = emailService;
     }
 
+
+    /**
+     *
+     * @return liste de toutes les absences de tous les employes de l'entreprise
+     */
+    //TODO
     @GetMapping
     public List<Absence> listAll(){
         return  absenceService.listAbsences();
     }
 
-
+    /**
+     * permet de d'ajouter une absence en base de donnée
+     * seul l'employé connecté peut faire une demande d'absence pour lui-même
+     *
+     * @param absenceDTO
+     * @return ResponseEntity :
+     *      *                  Created - 201 si ça marche
+     *      *                  Unauthorized - 401 sinon
+     * @throws Exception
+     */
     @PostMapping
     public ResponseEntity<?> addAbsence(@RequestBody AbsenceDTO absenceDTO) throws Exception {
 
@@ -109,35 +126,55 @@ public class AbsenceControl {
         }else{ return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("vous n'êtes pas autorisé à modifier la demande d'absence de quelqu'un d'autre ");}
     }
 
+    /**
+     *
+     * @param employeId
+     * @return liste de tous les employes
+     */
     @RequestMapping("/employe")
     @GetMapping
     public List<Absence> listAllByEmploye(
-            @RequestParam(name = "id", required = true) int id){
-        return  absenceService.listAbsenceByEmploye(id);
+            @RequestParam(name = "id", required = true) int employeId){
+        return  absenceService.listAbsenceByEmploye(employeId);
     }
 
+    /**
+     *
+     * @param departementid
+     * @return liste de tous les employes pour un departement donné
+     */
     @RequestMapping("/departement")
     @GetMapping
     public List<Absence> listAllByEmployeDepartement(
-            @RequestParam(name = "id", required = true) int id){
-        return  absenceService.listAbsenceByEmployeDepartement(id);
+            @RequestParam(name = "id", required = true) int departementid){
+        return  absenceService.listAbsenceByEmployeDepartement(departementid);
     }
 
-
+    /**
+     *
+     * @param managerId
+     * @return liste de tous les employes ayant le même manager d'id donné
+     */
     @RequestMapping("/manager")
     @GetMapping
     public List<Absence> listAllByEmployeManager(
-            @RequestParam(name = "id", required = true) int id){
-        return  absenceService.getAbsenceByEmployeManagaerId(id);
+            @RequestParam(name = "id", required = true) int managerId){
+        return  absenceService.getAbsenceByEmployeManagaerId(managerId);
     }
 
 
-
-
-
-
-
-
+    /**
+     * change le statut d'une demande d'absence,
+     * seul le manager connecté de l'employe qui a fait la demande est autorisé
+     *
+     * un mail est envoyé à l'employé pour l'informer que sa demande a changé de statut
+     *
+     * @param absence
+     * @param id
+     * @return ResponseEntity :
+     *                  OK - 200 si ça marche
+     *                  Unauthorized - 401 sinon
+     */
 
     @PutMapping("/statut/{id}")
     public ResponseEntity<?> ChangeAbsenceStatut(@RequestBody AbsenceDTO absence, @PathVariable("id") String id) {
@@ -145,6 +182,7 @@ public class AbsenceControl {
         Employe authEmploye = employeService.getActiveUser();
         Employe employe = employeService.getEmployeById(absence.getEmployeId());
 
+        //vérifie que la personne connectée est bien le manager de l'employé qui a fait la demande
         if (authEmploye.getManager().getId() == employe.getManager().getId()) {
 
             int absenceIdInt = Integer.parseInt(id);
@@ -174,13 +212,25 @@ public class AbsenceControl {
             }
             employeService.addEmploye(employe);
             absenceService.addAbsence(absence1);//addabsence uses .save() so it will update it if it already exists
-            emailService.sendSimpleMail("antoine.ligerot@outlook.fr", "le statut de votre demande de congé à été modifié, veuillez vous connnecter a votre compte pour vérifier"
+            emailService.sendSimpleMail(employe.getEmail(), "le statut de votre demande de congé à été modifié, veuillez vous connnecter a votre compte pour vérifier"
                     + "\n " + "nouveau statut = " + absence.getStatut(), "le statut de votre absence à changé");
-            return ResponseEntity.status(HttpStatus.CREATED).body("statut changé");
+            return ResponseEntity.status(HttpStatus.OK).body("statut changé");
         }else {return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("seul le manager de cet employé peut changer le statut de son absence");}
     }
 
 
+    /**
+     * change une demande d'absence Initiale ou une absence refusée
+     * seul l'employé connecté peut modifier sa demande, il n'a pas le droit d'en modifier le statut.
+     *
+     *
+     *
+     * @param absenceDTO
+     * @param id
+     * @return ResponseEntity :
+     *      *                  OK - 200 si ça marche
+     *      *                  Unauthorized - 401 sinon
+     */
     @PutMapping("/{id}")
     public ResponseEntity<?> ChangeAbsence(@RequestBody AbsenceDTO absenceDTO, @PathVariable("id") String id) {
 
@@ -203,10 +253,19 @@ public class AbsenceControl {
             absenceService.addAbsence(absence1);
 
 
-            return ResponseEntity.status(HttpStatus.CREATED).body("Absence modifiée");
+            return ResponseEntity.status(HttpStatus.OK).body("Absence modifiée");
         }else {return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("seul l'employé peut modifier ses demandes d'absence'");}
     }
 
+
+    /**supprime une absence,
+     * seul l'employé connecté peut supprimer ses absences
+     *
+     * @param absenceId
+     * @return ResponseEntity :
+     *      *                  OK - 200 si ça marche
+     *      *                  Unauthorized - 401 sinon
+     */
     @RequestMapping("/{id}")
     @DeleteMapping
     public ResponseEntity<?> deleteAbsence(@PathVariable("id") String absenceId) {
@@ -228,7 +287,7 @@ public class AbsenceControl {
 
 
             absenceService.deleteAbsence(Integer.parseInt(absenceId));
-            return ResponseEntity.status(HttpStatus.CREATED).body("Absence supprimé");
+            return ResponseEntity.status(HttpStatus.OK).body("Absence supprimé");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("seul l'employé concerné peut supprimer une demande d'absence");
 

@@ -40,6 +40,16 @@ public class EmployeControl {
         return employeService.listEmployes();
     }
 
+
+    /**
+     * permet d'ajouter un employé en base de donnée
+     * seul un admin est autorisé
+     *
+     * @param employeDTO
+     * @return ResponseEntity created - 201
+     *
+     *
+     */
     @PostMapping
     public ResponseEntity<?> addEmploye(@RequestBody EmployeDTO employeDTO){
 
@@ -63,6 +73,17 @@ public class EmployeControl {
         return ResponseEntity.status(HttpStatus.CREATED).body("employe cree");
     }
 
+
+    /**
+     * permet à l'employé connecté de changer son mot de passe s'il le souhaite
+     *
+     * @param employe
+     * @param employeId
+     * @return  ResponseEntity :
+     *                      ok - 200
+     *                      unauthorized - 401
+     */
+
     @RequestMapping("/newpassword/{id}")
     @PostMapping
     public ResponseEntity<?> changeEmployePassword(@RequestBody EmployeDTO employe,@PathVariable("id") String employeId){
@@ -74,29 +95,46 @@ public class EmployeControl {
         Employe employe1= employeService.getEmployeById(Integer.parseInt(employeId));
         employe1.setPassword(pswEncoded);
         employeService.addEmploye(employe1);
-        return   ResponseEntity.status(HttpStatus.CREATED).body("mot de passe changé");
+        return   ResponseEntity.status(HttpStatus.OK).body("mot de passe changé");
         }else{
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("vous n'êtes pas autorisé à changer le mot de passe de quelqu'un d'autre");}
         }
 
+    /**
+     * permet à un admin de modifier les information personnelles (hors mdp) d'un employe
+     *
+     * @param employeDTO
+     * @param employeId
+     * @return  ResponseEntity
+     *                      ok - 200
+     */
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> testPut(@RequestBody EmployeDTO employe, @PathVariable("id") String employeId) {
+    public ResponseEntity<?> testPut(@RequestBody EmployeDTO employeDTO, @PathVariable("id") String employeId) {
 
             Employe employe1 = employeService.getEmployeById(Integer.parseInt(employeId));
-            employe1.setFirstName(employe.getFirstName());
-            employe1.setLastName(employe.getLastName());
-            employe1.setManager(employeService.getEmployeById(employe.getManagerId()));
-            employe1.setDepartement(departementService.getDepartementById(employe.getDepartementId()));
-            employe1.setRoles(employe.getRoles());
-            employe1.setSoldeConge(employe.getSoldeConge());
-            employe1.setSoldeRtt(employe.getSoldeRtt());
+            employe1.setFirstName(employeDTO.getFirstName());
+            employe1.setLastName(employeDTO.getLastName());
+            employe1.setManager(employeService.getEmployeById(employeDTO.getManagerId()));
+            employe1.setDepartement(departementService.getDepartementById(employeDTO.getDepartementId()));
+            employe1.setRoles(employeDTO.getRoles());
+            employe1.setSoldeConge(employeDTO.getSoldeConge());
+            employe1.setSoldeRtt(employeDTO.getSoldeRtt());
             employeService.addEmploye(employe1);
 
             return ResponseEntity.status(HttpStatus.OK).body("l'employé a été modfié");
     }
 
+
+
+    /**
+     * permet à un admin de supprimer un employe de la base de donnée
+     *
+     * @param employeId
+     * @return  ResponseEntity
+     *                      ok - 200
+     */
 
     @RequestMapping("/{id}")
     @DeleteMapping

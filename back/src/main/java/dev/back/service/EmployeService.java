@@ -24,7 +24,6 @@ public class EmployeService {
 
     public Employe getEmployeById(Integer id){
         Optional<Employe> EmployeOp = employeRepo.findById(id);
-        // else throw new Exception()
         return EmployeOp.orElse(null);
 
     }
@@ -47,12 +46,24 @@ public class EmployeService {
         return employeRepo.findByEmail(email).orElseThrow();
     }
 
+
+
+    /**
+     * utilise .save donc permet de créer ET de modifier
+     * @param employe
+     */
     @Transactional
     public void addEmploye(Employe employe) {
         employeRepo.save(employe);
 
     }
 
+
+    /**
+     * utilise le jwtToken pour récuperer un employé en base de donnée
+     *
+     * @return Employe connecté
+     */
     public Employe getActiveUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return getEmployeByEmail(authentication.getName());
