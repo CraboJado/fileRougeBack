@@ -11,7 +11,6 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class JoursOffService {
@@ -40,7 +39,7 @@ public class JoursOffService {
 
     public void deleteJourOff(JoursOff joursOff){joursOffRepo.delete(joursOff);}
 
-    public JoursOff jourOffById(int id){return joursOffRepo.findById(id).orElseThrow();}
+    public JoursOff getJourOffById( int id){return joursOffRepo.findById(id).orElseThrow();}
 
     public void deleteJourOff(int id){joursOffRepo.delete(joursOffRepo.findById(id).orElseThrow());}
 
