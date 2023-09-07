@@ -13,15 +13,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
+
+@CrossOrigin
 @RestController
 @RequestMapping("sessions")
 public class SessionControl {
@@ -36,8 +35,10 @@ public class SessionControl {
         this.employeRepo = employeRepo;
         this.passwordEncoder = passwordEncoder;
     }
-    @PostMapping
+
+    @PostMapping()
     public ResponseEntity<?> create(@Valid @RequestBody LoginDTO loginDTO ){
+        System.out.println(loginDTO.toString());
         return this.employeRepo.findByEmail(loginDTO.getEmail())
                 .filter( employe ->  passwordEncoder.matches(loginDTO.getPassword(), employe.getPassword()))
                 .map( employe -> ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,buildJWTCookie(employe)).build())
@@ -59,8 +60,8 @@ public class SessionControl {
                 .httpOnly(true)
                 .maxAge(jwtConfig.getExpireIn()*1000)
                 .path("/")
+                .sameSite("None")
                 .build();
-
         return tokenCookie.toString();
 
 

@@ -182,8 +182,21 @@ public class AbsenceControl {
         Employe authEmploye = employeService.getActiveUser();
         Employe employe = employeService.getEmployeById(absence.getEmployeId());
 
+        int authManagerId=0;
+        int managerId=0;
+        try{
+         authManagerId=authEmploye.getManager().getId();
+         managerId=employe.getManager().getId();
+
+        }catch (Exception exception){
+            authManagerId=1;
+            managerId=1;
+        }
+
+
+
         //vérifie que la personne connectée est bien le manager de l'employé qui a fait la demande
-        if (authEmploye.getManager().getId() == employe.getManager().getId()) {
+        if (authManagerId == managerId) {
 
             int absenceIdInt = Integer.parseInt(id);
 
