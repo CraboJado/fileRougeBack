@@ -50,8 +50,8 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests(
                         auth -> auth
-
-                                .requestMatchers(antMatcher("/sessions")).permitAll()
+                                .requestMatchers( "/**" ).permitAll()
+                               /* .requestMatchers(antMatcher("/sessions")).permitAll()
                                 .requestMatchers(antMatcher("/logout")).permitAll()
                                 .requestMatchers(antMatcher(HttpMethod.GET,"/departement")).permitAll()
                                 .requestMatchers(antMatcher(HttpMethod.POST,"/employe")).hasAuthority("ADMIN")
@@ -65,7 +65,7 @@ public class WebSecurityConfig {
                                 .requestMatchers(antMatcher(HttpMethod.POST,"/departement/**")).hasAuthority("ADMIN")
                                 .requestMatchers(antMatcher(HttpMethod.GET,"/absence")).hasAuthority("ADMIN")
                                 .requestMatchers(antMatcher(HttpMethod.GET,"/employe")).hasAnyAuthority("ADMIN","MANAGER")
-                                .anyRequest().authenticated()
+                                .anyRequest().authenticated()*/
                 )
                 .csrf(AbstractHttpConfigurer::disable
                         // .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())

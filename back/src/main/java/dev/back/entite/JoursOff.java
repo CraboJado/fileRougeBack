@@ -27,12 +27,43 @@ public class JoursOff {
 
     LocalDate jour;
     TypeJour typeJour;
-
     String description;
 
     public JoursOff(LocalDate jour, TypeJour typeJour, String description) {
         this.jour = jour;
         this.typeJour = typeJour;
         this.description = description;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId( int id ) {
+        this.id=id;
+    }
+
+    public LocalDate getJour() {
+        return jour;
+    }
+
+    public void setJour( LocalDate jour ) {
+        this.jour=jour;
+    }
+
+    public TypeJour getTypeJour() {
+        return typeJour;
+    }
+
+    public void setTypeJour( TypeJour typeJour ) {
+        this.typeJour=typeJour;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription( String description ) {
+        this.description=description;
     }
 }

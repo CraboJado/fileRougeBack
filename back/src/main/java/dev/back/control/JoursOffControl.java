@@ -5,7 +5,6 @@ import dev.back.entite.*;
 import dev.back.service.AbsenceService;
 import dev.back.service.EmployeService;
 import dev.back.service.JoursOffService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -76,14 +75,14 @@ public class JoursOffControl {
      * @return ResponseEntity
      *                  ok - 200
      */
-    @PutMapping
-    public ResponseEntity<?> changeJourOffDate(@RequestBody JoursOff joursOff){
-        JoursOff joursOff1=joursOffService.jourOffById(joursOff.getId());
-        joursOff1.setJour(joursOff.getJour());
-        joursOff1.setTypeJour(joursOff.getTypeJour());
-        joursOff1.setDescription(joursOff.getDescription());
+    @PutMapping("/{id}")
+    public ResponseEntity<?> changeJourOffDate(@RequestBody JourOffDTO jourOffDTO, @PathVariable("id") int id){
+        JoursOff joursOff1=joursOffService.getJourOffById(id);
+        joursOff1.setJour(jourOffDTO.getJour());
+        joursOff1.setTypeJour(jourOffDTO.getTypeJour());
+        joursOff1.setDescription(jourOffDTO.getDescription());
         joursOffService.addJourOff(joursOff1);
-        return   ResponseEntity.status(HttpStatus.OK).body("date changée");
+        return   ResponseEntity.status(HttpStatus.OK).body("Jour officiel modifié");
     }
 
 
@@ -96,7 +95,7 @@ public class JoursOffControl {
     @RequestMapping("/{id}")
     @DeleteMapping
     public ResponseEntity<?> deleteJourOff(@PathVariable("id") String jourOffId){
-        JoursOff joursOff=joursOffService.jourOffById(Integer.parseInt(jourOffId));
+        JoursOff joursOff=joursOffService.getJourOffById(Integer.parseInt(jourOffId));
 
         //si un RTT_employeur est supprimé et que les absences etaient validée,
         //il faut rendre le RTT decompté au salarié
