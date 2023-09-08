@@ -60,7 +60,6 @@ public class SessionControl {
                 .httpOnly(true)
                 .maxAge(jwtConfig.getExpireIn()*1000)
                 .path("/")
-                .sameSite("None")
                 .build();
         return tokenCookie.toString();
 
