@@ -10,6 +10,9 @@ Content-Type: application/json
   "password": "passwordtout"
 }
 
+###
+GET localhost:8080/absence/employe
+
 
 ###
 POST localhost:8080/departement

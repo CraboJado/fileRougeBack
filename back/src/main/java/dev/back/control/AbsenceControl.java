@@ -128,14 +128,14 @@ public class AbsenceControl {
 
     /**
      *
-     * @param employeId
+     *
      * @return liste de tous les employes
      */
-    @RequestMapping("/employe")
-    @GetMapping
-    public List<Absence> listAllByEmploye(
-            @RequestParam(name = "id", required = true) int employeId){
-        return  absenceService.listAbsenceByEmploye(employeId);
+    @GetMapping("/employe")
+    public List<Absence> listAllByEmploye(){
+        Employe authEmploye = employeService.getActiveUser();
+        System.out.println(authEmploye.getId());
+        return  absenceService.listAbsenceByEmploye(authEmploye.getId());
     }
 
     /**
