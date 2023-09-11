@@ -92,8 +92,8 @@ public class JoursOffControl {
      * @param jourOffId
      * @return ResponseEntity  ok - 200
      */
-    @RequestMapping("/{id}")
-    @DeleteMapping
+    @RequestMapping(value="/{id}", method={RequestMethod.DELETE, RequestMethod.GET})
+//    @DeleteMapping
     public ResponseEntity<?> deleteJourOff(@PathVariable("id") String jourOffId){
         JoursOff joursOff=joursOffService.getJourOffById(Integer.parseInt(jourOffId));
 

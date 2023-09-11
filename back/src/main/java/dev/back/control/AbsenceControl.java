@@ -181,7 +181,7 @@ public class AbsenceControl {
 
             absence.setStatut(Statut.INITIALE);
             absenceService.addAbsence(absence);
-            return ResponseEntity.status(HttpStatus.CREATED).body("absence cré");
+            return ResponseEntity.status(HttpStatus.CREATED).body("absence créée");
     }
 
     /**
