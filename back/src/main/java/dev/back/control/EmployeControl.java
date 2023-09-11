@@ -35,6 +35,11 @@ public class EmployeControl {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @GetMapping("active")
+    public Employe listActive(){
+       return employeService.getActiveUser();
+    }
+
     @GetMapping
     public List<Employe> listAll(){
         return employeService.listEmployes();

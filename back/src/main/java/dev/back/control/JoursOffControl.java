@@ -94,8 +94,8 @@ public class JoursOffControl {
      */
     @RequestMapping(value="/{id}", method={RequestMethod.DELETE, RequestMethod.GET})
 //    @DeleteMapping
-    public ResponseEntity<?> deleteJourOff(@PathVariable("id") String jourOffId){
-        JoursOff joursOff=joursOffService.getJourOffById(Integer.parseInt(jourOffId));
+    public ResponseEntity<?> deleteJourOff(@PathVariable("id") int jourOffId){
+        JoursOff joursOff=joursOffService.getJourOffById(jourOffId);
 
         //si un RTT_employeur est supprimé et que les absences etaient validée,
         //il faut rendre le RTT decompté au salarié
@@ -109,7 +109,7 @@ public class JoursOffControl {
             }
         }
 
-        joursOffService.deleteJourOff(Integer.parseInt(jourOffId));
+        joursOffService.deleteJourOff(jourOffId);
         return   ResponseEntity.status(HttpStatus.OK).body("jour officiel supprimé");
     }
 

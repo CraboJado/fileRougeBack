@@ -7,7 +7,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -15,19 +14,13 @@ import java.util.Map;
 @Service
 public class JoursOffService {
     @Autowired
-
     JoursOffRepo joursOffRepo;
     public List<JoursOff> listJoursOff() {
         return joursOffRepo.findAll();
     }
-
-
-
     public JoursOff jourOffByDatee(LocalDate jour){
         return  joursOffRepo.findByJour(jour).orElseThrow();
     }
-
-
     /**
      * utilise .save donc permet de créer ET de modifier
      * @param joursOff
@@ -43,8 +36,6 @@ public class JoursOffService {
 
     public void deleteJourOff(int id){joursOffRepo.delete(joursOffRepo.findById(id).orElseThrow());}
 
-
-
     /**
      * utilise l'api du gouvernement pour ajouter les jours fériés
      * pour la métropole est pour une année donnée en base de donnée
@@ -54,7 +45,6 @@ public class JoursOffService {
      */
     public void fetchAndSaveJoursFeries(int year) {
         RestTemplate restTemplate = new RestTemplate();
-
         //on suppose que tous nos employés sont en france metropolitaine
         String apiUrl = "https://calendrier.api.gouv.fr/jours-feries/metropole/{annee}.json";
         String apiUrlWithYear = apiUrl.replace("{annee}", String.valueOf(year));
@@ -62,7 +52,6 @@ public class JoursOffService {
         List<JoursOff> joursOffList = joursOffRepo.findAllByTypeJour(TypeJour.JOUR_FERIE);
         for (Map.Entry<String, String> entry : joursFeriesData.entrySet()) {
             JoursOff jourFerie = new JoursOff();
-
             if(joursOffRepo.findByJour(LocalDate.parse(entry.getKey())).isEmpty()){
                 jourFerie.setTypeJour(TypeJour.JOUR_FERIE);
                 jourFerie.setJour(LocalDate.parse(entry.getKey()));
@@ -70,8 +59,6 @@ public class JoursOffService {
 
                 joursOffRepo.save(jourFerie);
             }
-
-
         }
     }
 }
