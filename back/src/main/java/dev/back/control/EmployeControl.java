@@ -75,7 +75,7 @@ public class EmployeControl {
 
         employeService.addEmploye(employe);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("employe cree");
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 
@@ -100,7 +100,7 @@ public class EmployeControl {
         Employe employe1= employeService.getEmployeById(Integer.parseInt(employeId));
         employe1.setPassword(pswEncoded);
         employeService.addEmploye(employe1);
-        return   ResponseEntity.status(HttpStatus.OK).body("mot de passe changé");
+        return   ResponseEntity.status(HttpStatus.OK).build();
         }else{
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("vous n'êtes pas autorisé à changer le mot de passe de quelqu'un d'autre");}
         }
@@ -128,7 +128,7 @@ public class EmployeControl {
             employe1.setSoldeRtt(employeDTO.getSoldeRtt());
             employeService.addEmploye(employe1);
 
-            return ResponseEntity.status(HttpStatus.OK).body("l'employé a été modfié");
+            return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 
@@ -145,7 +145,7 @@ public class EmployeControl {
     @DeleteMapping
     public ResponseEntity<?> deleteEmploye(@PathVariable("id") String employeId){
         employeService.deleteEmploye(Integer.parseInt(employeId));
-        return   ResponseEntity.status(HttpStatus.OK).body("employé supprimé");
+        return   ResponseEntity.status(HttpStatus.OK).build();
     }
 
 

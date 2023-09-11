@@ -48,7 +48,7 @@ public class DepartementControl {
         Departement departement= new Departement(departementDTO.getName());
         departementService.addDepartement(departement);
 
-        return   ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.TEXT_PLAIN).body("departement créé");
+        return   ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.TEXT_PLAIN).build();
     }
 
     /**
@@ -62,7 +62,7 @@ public class DepartementControl {
         Departement departement1= departementService.getDepartementById(departement.getId());
         departement1.setName(departement.getName());
         departementService.addDepartement(departement);
-        return   ResponseEntity.status(HttpStatus.OK).body("département modifié");
+        return   ResponseEntity.status(HttpStatus.OK).build();
 
   }
 
@@ -78,7 +78,7 @@ public class DepartementControl {
     @DeleteMapping
     public ResponseEntity<?> deleteDepartement(@PathVariable("id") String departementId){
        departementService.deleteDepartement(Integer.parseInt(departementId));
-        return   ResponseEntity.status(HttpStatus.OK).body("départemet supprimé");
+        return   ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }

@@ -58,74 +58,6 @@ public class AbsenceControl {
      *      *                  Unauthorized - 401 sinon
      * @throws Exception
      */
-//    @PostMapping
-//    public ResponseEntity<?> addAbsence(@RequestBody AbsenceDTO absenceDTO) throws Exception {
-//
-//        Employe employe = employeService.getEmployeById(absenceDTO.getEmployeId());
-//
-//        Employe authEmploye = employeService.getActiveUser();
-//
-//        if (absenceDTO.getEmployeId() == authEmploye.getId()) {
-//
-//
-//            if (TypeAbsence.CONGE_SANS_SOLDE.equals(absenceDTO.getTypeAbsence())) {
-//                if (Objects.equals(absenceDTO.getMotif(), "")) {
-//                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("le motif est obligatoire pour un congé sans solde ");
-//                }
-//            }
-//            Absence absence = new Absence(LocalDateTime.now(), absenceDTO.getDateDebut(), absenceDTO.getDateFin(), absenceDTO.getStatut(), absenceDTO.getTypeAbsence(), absenceDTO.getMotif(), employe);
-//
-//            List<JoursOff> joursOffList = joursOffService.listJoursOff();
-//
-//            for (JoursOff joursOff : joursOffList) {
-//                if (absence.getDateDebut().isEqual(joursOff.getJour()) || absence.getDateFin().isEqual(joursOff.getJour())) {
-//                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("la date de debut ou de fin ne peut pas être un jour férié ou un rtt employeur");
-//                }
-//            }
-//
-//            if(absenceDTO.getDateDebut().getDayOfWeek() == DayOfWeek.SATURDAY
-//                    || absenceDTO.getDateDebut().getDayOfWeek() == DayOfWeek.SUNDAY
-//                    ||absenceDTO.getDateFin().getDayOfWeek() == DayOfWeek.SATURDAY
-//                    || absenceDTO.getDateFin().getDayOfWeek() == DayOfWeek.SUNDAY ){
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                        .body("la date de début ou de fin ne peut pas être en weekend ");
-//            }
-//
-//            List<Absence> absenceList = absenceService.listAbsenceByEmploye(absence.getEmploye().getId());
-//            boolean superpositionDeDate = false;
-//            List<LocalDate> datesDemandes = new ArrayList<>();
-//            try {
-//                datesDemandes = absenceDTO.getDateDebut().datesUntil(absenceDTO.getDateFin().plusDays(1)).toList();
-//            } catch (Exception ex) {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("la date de fin ne peut pas être avant celle de début ");
-//            }
-//
-//            for (Absence absenceTempo : absenceList) {
-//                List<LocalDate> datesPrises = absenceTempo.getDateDebut().datesUntil(absenceTempo.getDateFin().plusDays(1)).toList();
-//                for (LocalDate jour : datesPrises) {
-//                    for (LocalDate jourDemande : datesDemandes) {
-//
-//                        if (jourDemande.equals(jour)) {
-//                            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("vous avez déjà une demande de congé sur cette période ");
-//
-//                        }
-//                    }
-//                }
-//            }
-//
-//
-//            if (absence.getDateCreation().isAfter(absenceDTO.getDateDebut().atTime(LocalTime.now()))) {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("la date de debut ne peut pas être passée ");
-//            }
-//            absence.setStatut(Statut.INITIALE);
-//            absenceService.addAbsence(absence);
-//            return ResponseEntity.status(HttpStatus.CREATED).body("absence créée");
-//
-//
-//        }else
-//        { return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("vous n'êtes pas autorisé à créer une demande d'absence pour quelqu'un d'autre ");}
-//    }
-
     @PostMapping
     public ResponseEntity<?> addAbsence(@RequestBody AbsenceDTO absenceDTO) throws Exception {
         Employe authEmploye = employeService.getActiveUser();
@@ -181,7 +113,7 @@ public class AbsenceControl {
 
             absence.setStatut(Statut.INITIALE);
             absenceService.addAbsence(absence);
-            return ResponseEntity.status(HttpStatus.CREATED).body("absence créée");
+            return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /**
@@ -288,7 +220,7 @@ public class AbsenceControl {
 
             emailService.sendSimpleMail(employe.getEmail(), "le statut de votre demande de congé à été modifié, veuillez vous connnecter a votre compte pour vérifier"
                     + "\n " + "nouveau statut = " + absence.getStatut(), "le statut de votre absence à changé");
-            return ResponseEntity.status(HttpStatus.OK).body("statut changé");
+            return ResponseEntity.status(HttpStatus.OK).build();
         }else {return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("seul le manager de cet employé peut changer le statut de son absence");}
     }
 
@@ -323,7 +255,7 @@ public class AbsenceControl {
 
             absenceService.addAbsence(absence);
 
-            return ResponseEntity.status(HttpStatus.OK).body("Absence modifiée");
+            return ResponseEntity.status(HttpStatus.OK).build();
         }else {return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("seul l'employé peut modifier ses demandes d'absence'");}
     }
 
@@ -357,7 +289,7 @@ public class AbsenceControl {
             }
 
             absenceService.deleteAbsence(Integer.parseInt(absenceId));
-            return ResponseEntity.status(HttpStatus.OK).body("Absence supprimé");
+            return ResponseEntity.status(HttpStatus.OK).build();
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("seul l'employé concerné peut supprimer une demande d'absence");
         }

@@ -110,7 +110,7 @@ public class JoursOffControl {
         }
 
         joursOffService.deleteJourOff(jourOffId);
-        return   ResponseEntity.status(HttpStatus.OK).body("jour officiel supprimé");
+        return   ResponseEntity.status(HttpStatus.OK).build();
     }
 
 
@@ -131,7 +131,7 @@ public class JoursOffControl {
         }
 
 
-        return   ResponseEntity.status(HttpStatus.CREATED).body("les jours fériés");
+        return   ResponseEntity.status(HttpStatus.CREATED).build();
 
     }
 
