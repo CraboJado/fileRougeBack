@@ -35,8 +35,6 @@ public class StartUp{
         this.joursOffService = joursOffService;
         this.passwordEncoder = passwordEncoder;
     }
-
-
     /**
      * on rajoute des objets dans notre base de donnée au démarrage
      */

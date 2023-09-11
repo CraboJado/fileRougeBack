@@ -34,7 +34,6 @@ public class EmployeControl {
         this.departementService = departementService;
         this.passwordEncoder = passwordEncoder;
     }
-
     @GetMapping("active")
     public Employe listActive(){
        return employeService.getActiveUser();
@@ -44,6 +43,7 @@ public class EmployeControl {
     public List<Employe> listAll(){
         return employeService.listEmployes();
     }
+
 
 
     /**
