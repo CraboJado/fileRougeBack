@@ -11,6 +11,15 @@ Content-Type: application/json
 }
 
 ###
+POST localhost:8080/sessions
+Content-Type: application/json
+
+{
+  "email" : "examplemanager@gmail.com",
+  "password": "passwordmanager"
+}
+
+###
 GET localhost:8080/absence/employe
 
 
@@ -29,12 +38,24 @@ POST localhost:8080/absence
 Content-Type: application/json
 
 {
-  "dateDebut" : "2025-06-13",
-  "dateFin" : "2025-06-30",
+  "dateDebut" : "2023-12-13",
+  "dateFin" : "2023-12-13",
   "statut" : 1,
   "typeAbsence" : "RTT",
-  "motif": "tetestests",
-  "employeId" : 6
+  "motif": "tetestests"
+}
+
+
+###
+PUT localhost:8080/absence/1
+Content-Type: application/json
+
+{
+  "dateDebut" : "2023-12-13",
+  "dateFin" : "2023-12-13",
+  "statut" : 1,
+  "typeAbsence" : "RTT",
+  "motif": "tetestests"
 }
 
 
@@ -57,11 +78,6 @@ Content-Type: application/json
   "motif": "",
   "employeId" : 2
 }
-
-###
-
-
-###
 
 ###
 uniquement l'employé d'id 1

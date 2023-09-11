@@ -69,13 +69,13 @@
 //
 //
 //
-//        absenceService.addAbsence(new Absence(LocalDateTime.parse("2023-10-10T01:02:04"),LocalDate.parse("2023-11-02"),LocalDate.parse("2023-11-10"),Statut.INITIALE,TypeAbsence.RTT,"",employeService.getEmployeById(3)));
-//        absenceService.addAbsence(new Absence(LocalDateTime.parse("2023-10-10T01:02:04"),LocalDate.parse("2022-11-02"),LocalDate.parse("2022-11-10"),Statut.VALIDEE,TypeAbsence.CONGE_PAYE,"",employeService.getEmployeById(1)));
-//        absenceService.addAbsence(new Absence(LocalDateTime.parse("2023-12-10T01:02:04"),LocalDate.parse("2025-01-02"),LocalDate.parse("2025-01-10"),Statut.VALIDEE,TypeAbsence.CONGE_PAYE,"",employeService.getEmployeById(1)));
-//        absenceService.addAbsence(new Absence(LocalDateTime.parse("2023-10-10T01:02:04"),LocalDate.parse("2023-12-02"),LocalDate.parse("2023-12-02"),Statut.INITIALE,TypeAbsence.CONGE_SANS_SOLDE,"testmotif",employeService.getEmployeById(2)));
-//        absenceService.addAbsence(new Absence(LocalDateTime.parse("2023-10-10T01:02:04"),LocalDate.parse("2023-12-03"),LocalDate.parse("2023-12-03"),Statut.INITIALE,TypeAbsence.CONGE_SANS_SOLDE,"testmotif",employeService.getEmployeById(3)));
-//        absenceService.addAbsence(new Absence(LocalDateTime.parse("2023-10-10T01:02:04"),LocalDate.parse("2023-12-04"),LocalDate.parse("2023-12-04"),Statut.INITIALE,TypeAbsence.CONGE_SANS_SOLDE,"testmotif",employeService.getEmployeById(4)));
-//        absenceService.addAbsence(new Absence(LocalDateTime.parse("2023-10-10T01:02:04"),LocalDate.parse("2023-12-04"),LocalDate.parse("2023-12-04"),Statut.INITIALE,TypeAbsence.CONGE_SANS_SOLDE,"testmotif",employeService.getEmployeById(3)));
+//        absenceService.addAbsence(new Absence(LocalDateTime.parse("2023-10-10T01:02:04"),LocalDate.parse("2023-09-01"),LocalDate.parse("2023-09-04"),Statut.INITIALE,TypeAbsence.RTT,"",employeService.getEmployeById(3)));
+//        absenceService.addAbsence(new Absence(LocalDateTime.parse("2023-10-10T01:02:04"),LocalDate.parse("2023-09-05"),LocalDate.parse("2023-09-06"),Statut.VALIDEE,TypeAbsence.CONGE_PAYE,"",employeService.getEmployeById(1)));
+//        absenceService.addAbsence(new Absence(LocalDateTime.parse("2023-12-10T01:02:04"),LocalDate.parse("2023-09-08"),LocalDate.parse("2023-09-08"),Statut.VALIDEE,TypeAbsence.CONGE_PAYE,"",employeService.getEmployeById(1)));
+//        absenceService.addAbsence(new Absence(LocalDateTime.parse("2023-10-10T01:02:04"),LocalDate.parse("2023-09-18"),LocalDate.parse("2023-09-19"),Statut.INITIALE,TypeAbsence.CONGE_SANS_SOLDE,"testmotif",employeService.getEmployeById(2)));
+//        absenceService.addAbsence(new Absence(LocalDateTime.parse("2023-10-10T01:02:04"),LocalDate.parse("2023-09-03"),LocalDate.parse("2023-09-03"),Statut.INITIALE,TypeAbsence.CONGE_SANS_SOLDE,"testmotif",employeService.getEmployeById(3)));
+//        absenceService.addAbsence(new Absence(LocalDateTime.parse("2023-10-10T01:02:04"),LocalDate.parse("2023-09-25"),LocalDate.parse("2023-09-27"),Statut.INITIALE,TypeAbsence.CONGE_SANS_SOLDE,"testmotif",employeService.getEmployeById(4)));
+//        absenceService.addAbsence(new Absence(LocalDateTime.parse("2023-10-10T01:02:04"),LocalDate.parse("2023-09-28"),LocalDate.parse("2023-09-29"),Statut.INITIALE,TypeAbsence.CONGE_SANS_SOLDE,"testmotif",employeService.getEmployeById(3)));
 //        absenceService.addAbsence(new Absence(LocalDateTime.parse("2023-10-10T01:02:04"),LocalDate.parse("2023-12-05"),LocalDate.parse("2023-12-05"),Statut.INITIALE,TypeAbsence.CONGE_SANS_SOLDE,"testmotif",employeService.getEmployeById(2)));
 //        absenceService.addAbsence(new Absence(LocalDateTime.parse("2023-10-10T01:02:04"),LocalDate.parse("2023-12-06"),LocalDate.parse("2023-12-06"),Statut.INITIALE,TypeAbsence.CONGE_SANS_SOLDE,"testmotif",employeService.getEmployeById(1)));
 //        absenceService.addAbsence(new Absence(LocalDateTime.parse("2023-10-10T01:02:04"),LocalDate.parse("2023-12-06"),LocalDate.parse("2023-12-06"),Statut.INITIALE,TypeAbsence.CONGE_SANS_SOLDE,"testmotif",employeService.getEmployeById(3)));
