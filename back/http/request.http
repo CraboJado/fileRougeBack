@@ -60,7 +60,7 @@ Content-Type: application/json
 
 
 ###
-DELETE localhost:8080/absence/5
+DELETE localhost:8080/absence/2
 
 Content-Type: application/json
 ###

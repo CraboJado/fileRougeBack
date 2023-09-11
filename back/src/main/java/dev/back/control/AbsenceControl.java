@@ -337,10 +337,9 @@ public class AbsenceControl {
      *      *                  OK - 200 si ça marche
      *      *                  Unauthorized - 401 sinon
      */
-    @RequestMapping
-    @DeleteMapping("/{id}")
+    @RequestMapping(value="/{id}", method={RequestMethod.DELETE, RequestMethod.GET})
+//    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAbsence(@PathVariable("id") String absenceId) {
-        System.out.println("aaaaaaaaaaaaa");
         Employe authEmploye = employeService.getActiveUser();
         Absence absence = absenceService.getAbsenceById(Integer.parseInt(absenceId));
         Employe employe = absence.getEmploye();
