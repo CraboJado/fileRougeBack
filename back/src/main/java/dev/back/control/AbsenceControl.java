@@ -48,8 +48,6 @@ public class AbsenceControl {
         return  absenceService.listAbsences();
     }
 
-
-
     /**
      * permet de d'ajouter une absence en base de donnée
      * seul l'employé connecté peut faire une demande d'absence pour lui-même
@@ -69,7 +67,7 @@ public class AbsenceControl {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("le motif est obligatoire pour un congé sans solde ");
                 }
             }
-            Absence absence = new Absence(LocalDateTime.now(), absenceDTO.getDateDebut(), absenceDTO.getDateFin(), absenceDTO.getStatut(), absenceDTO.getTypeAbsence(), absenceDTO.getMotif(), authEmploye);
+            Absence absence = new Absence(LocalDateTime.now(), absenceDTO.getDateDebut(), absenceDTO.getDateFin(), Statut.INITIALE, absenceDTO.getTypeAbsence(), absenceDTO.getMotif(), authEmploye);
 
             List<JoursOff> joursOffList = joursOffService.listJoursOff();
 
@@ -143,15 +141,22 @@ public class AbsenceControl {
 
     /**
      *
-     *
+     * @param managerId
      * @return liste de tous les employes ayant le même manager d'id donné
      */
     @RequestMapping("/manager")
     @GetMapping
     public List<Absence> listAllByEmployeManager(){
         Employe authEmploye = employeService.getActiveUser();
-        int id = authEmploye.getId();
-        return  absenceService.getAbsenceByEmployeManagaerId(id);
+        if(authEmploye.getManager()==null){
+            List<Absence> absenceList= absenceService.getAbsenceByEmployeManagaerId(authEmploye.getId());
+
+            absenceList.addAll(absenceService.listAbsenceByEmploye(authEmploye.getId()));
+
+            return absenceList;
+        }
+
+        return  absenceService.getAbsenceByEmployeManagaerId(authEmploye.getId());
     }
 
 
