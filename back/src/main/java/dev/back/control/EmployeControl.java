@@ -35,8 +35,17 @@ public class EmployeControl {
         this.passwordEncoder = passwordEncoder;
     }
     @GetMapping("active")
-    public Employe listActive(){
-       return employeService.getActiveUser();
+    public ResponseEntity<?> listActive(){
+        System.out.println("active");
+        Employe activeUser = employeService.getActiveUser();
+        Employe employe = new Employe();
+        employe.setSoldeRtt(activeUser.getSoldeRtt());
+        employe.setSoldeConge(activeUser.getSoldeConge());
+        employe.setRoles(activeUser.getRoles());
+        employe.setFirstName(activeUser.getFirstName());
+        employe.setLastName(activeUser.getLastName());
+        employe.setId(activeUser.getId());
+        return ResponseEntity.status(HttpStatus.OK).body(employe);
     }
 
     @GetMapping
