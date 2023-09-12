@@ -48,6 +48,8 @@ public class AbsenceControl {
         return  absenceService.listAbsences();
     }
 
+
+
     /**
      * permet de d'ajouter une absence en base de donnée
      * seul l'employé connecté peut faire une demande d'absence pour lui-même
@@ -141,14 +143,15 @@ public class AbsenceControl {
 
     /**
      *
-     * @param managerId
+     *
      * @return liste de tous les employes ayant le même manager d'id donné
      */
     @RequestMapping("/manager")
     @GetMapping
-    public List<Absence> listAllByEmployeManager(
-            @RequestParam(name = "id", required = true) int managerId){
-        return  absenceService.getAbsenceByEmployeManagaerId(managerId);
+    public List<Absence> listAllByEmployeManager(){
+        Employe authEmploye = employeService.getActiveUser();
+        int id = authEmploye.getId();
+        return  absenceService.getAbsenceByEmployeManagaerId(id);
     }
 
 
