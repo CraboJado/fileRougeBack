@@ -92,7 +92,12 @@ EmailService emailServiceImpl;
                         employe.setSoldeRtt(employe.getSoldeRtt() + nbRTTNeeded);
                     }
 
-                    emailServiceImpl.sendSimpleMail(employe.getManager().getEmail(), "la demande d'absence de " + employe.getLastName() + " a été validée par le traitement de nuit, en attente de votre validation", "Absence en attente de validation");
+                   try {
+                       emailServiceImpl.sendSimpleMail(employe.getManager().getEmail(), "la demande d'absence de " + employe.getLastName() + " a été validée par le traitement de nuit, en attente de votre validation", "Absence en attente de validation");
+                   }catch (Exception e){
+                       emailServiceImpl.sendSimpleMail(this.employeService.getEmployeById(1).getEmail(), "la demande d'absence de " + employe.getLastName() + " a été validée par le traitement de nuit, en attente de votre validation", "Absence en attente de validation");
+
+                   }
                     absenceService.addAbsence(absence);
                     employe.setSoldeRtt(employe.getSoldeRtt() - nbRTTNeeded);
                     employe.setSoldeConge(employe.getSoldeConge() - nbCongeNeeded);

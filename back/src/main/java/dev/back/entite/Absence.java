@@ -102,7 +102,7 @@ public class Absence {
         this.dateCreation = dateCreation;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
-        this.statut = Statut.INITIALE;
+        this.statut = statut;
         this.typeAbsence = typeAbsence;
         this.motif = motif;
         this.employe = employe;
