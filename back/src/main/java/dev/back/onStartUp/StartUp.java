@@ -41,7 +41,9 @@ public class StartUp{
     @EventListener(ContextRefreshedEvent.class)
     public void init() {
 
+        LocalDate date = LocalDate.parse("2024-02-24");
 
+        joursOffService.addJourOff(new JoursOff(date,TypeJour.RTT_EMPLOYEUR,"testRTTEMPLOYEUR"));
 
         departementService.addDepartement(new Departement("ressources humaines"));
         departementService.addDepartement(new Departement("informatique"));
