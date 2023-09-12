@@ -53,6 +53,7 @@ public class WebSecurityConfig {
                                 .requestMatchers(antMatcher("/sessions")).permitAll()
                                 .requestMatchers(antMatcher("/logout")).permitAll()
                                 .requestMatchers(antMatcher(HttpMethod.GET,"/departement")).permitAll()
+                                .requestMatchers(antMatcher(HttpMethod.GET,"/employe/active")).permitAll()
                                 .requestMatchers(antMatcher(HttpMethod.GET,"/absence/manager")).hasAuthority("MANAGER")
                                 .requestMatchers(antMatcher(HttpMethod.POST,"/employe")).hasAuthority("ADMIN")
                                 .requestMatchers(antMatcher(HttpMethod.POST,"/jouroff/**")).hasAuthority("ADMIN")
@@ -83,8 +84,6 @@ public class WebSecurityConfig {
                         .logoutSuccessHandler(((req, resp, auth) ->{
                             resp.setStatus(HttpStatus.OK.value());}))
                         .deleteCookies(jwtConfig.getCookie());});
-
-
 
         return http.build();
     }
