@@ -79,7 +79,6 @@ public class WebSecurityConfig {
                 .logout( logout ->{
                     logout
                         .logoutSuccessHandler(((req, resp, auth) ->{
-                            System.out.println("logout ici??????????????");
                             resp.setStatus(HttpStatus.OK.value());}))
                         .deleteCookies(jwtConfig.getCookie());});
 
