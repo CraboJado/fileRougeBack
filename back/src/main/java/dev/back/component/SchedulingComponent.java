@@ -52,7 +52,7 @@ EmailService emailServiceImpl;
      * un mail est ensuite envoyé au manager pour la validation
      */
 
-    @Scheduled(cron="@midnight")
+    @Scheduled(cron="0 5 16 * * ?")
     public void TraitementDeNuit(){
 
         System.out.println("traitement de nuit : "+LocalDate.now());
@@ -76,37 +76,38 @@ EmailService emailServiceImpl;
                     emailServiceImpl.sendSimpleMail(employe.getEmail(), "Bonjour " + employe.getFirstName() + " " + employe.getLastName() + "\n votre demande a été refusée par le traitement de nuit", "Absence Refusée automatiquement");
 
                     absenceService.addAbsence(absence);
+                    absenceService.addAbsence(absence);
 
                 } else {
-                    absence.setStatut(Statut.EN_ATTENTE);
+                        absence.setStatut(Statut.EN_ATTENTE);
 
-
-                    if (absence.getStatut().equals(Statut.REJETEE)) {
                         if (absence.getTypeAbsence().equals(TypeAbsence.RTT)) {
                             nbRTTNeeded = jourOuvre;
                         }
                         if (absence.getTypeAbsence().equals(TypeAbsence.CONGE_PAYE)) {
                             nbCongeNeeded = jourOuvre;
                         }
-                        employe.setSoldeConge(employe.getSoldeConge() + nbCongeNeeded);
-                        employe.setSoldeRtt(employe.getSoldeRtt() + nbRTTNeeded);
-                    }
+                    employe.setSoldeRtt(employe.getSoldeRtt() - nbRTTNeeded);
+                    employe.setSoldeConge(employe.getSoldeConge() - nbCongeNeeded);
+                    employeService.addEmploye(employe);
+                    absenceService.addAbsence(absence);
 
                    try {
                        emailServiceImpl.sendSimpleMail(employe.getManager().getEmail(), "la demande d'absence de " + employe.getLastName() + " a été validée par le traitement de nuit, en attente de votre validation", "Absence en attente de validation");
                    }catch (Exception e){
                        emailServiceImpl.sendSimpleMail(this.employeService.getEmployeById(1).getEmail(), "la demande d'absence de " + employe.getLastName() + " a été validée par le traitement de nuit, en attente de votre validation", "Absence en attente de validation");
-
+                        //si employe.manager.getemail ne renvoie rien c'est parceque
+                       // l'employe n'a pas de manager => c'est le big boss qui a l'id 1
                    }
-                    absenceService.addAbsence(absence);
-                    employe.setSoldeRtt(employe.getSoldeRtt() - nbRTTNeeded);
-                    employe.setSoldeConge(employe.getSoldeConge() - nbCongeNeeded);
-                    employeService.addEmploye(employe);
+
+
                 }
             }else{
                 absence.setStatut(Statut.VALIDEE);
+                absenceService.addAbsence(absence);
 
                  absence.getEmploye().setSoldeRtt(absence.getEmploye().getSoldeRtt()-1);
+                 employeService.addEmploye(absence.getEmploye());
                }
             }
         }
