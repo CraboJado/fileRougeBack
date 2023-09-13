@@ -47,24 +47,31 @@ public class JoursOffControl {
 
     @PostMapping()
     public ResponseEntity<?> addJourOff(@RequestBody JourOffDTO jourOffDTO) {
-        //TODO Verifier le role user
-        JoursOff joursOff = new JoursOff(jourOffDTO.getJour(),jourOffDTO.getTypeJour(),jourOffDTO.getDescription());
-        joursOffService.addJourOff(joursOff);
-        if(joursOff.getTypeJour().equals(TypeJour.RTT_EMPLOYEUR)){
 
-            for(Employe employe:employeService.listEmployes()) {
-                absenceService.addAbsence(new Absence(
-                        LocalDateTime.now(),
-                        jourOffDTO.getJour(),
-                        jourOffDTO.getJour(),
-                        Statut.INITIALE,
-                        TypeAbsence.RTT_EMPLOYEUR,
-                        jourOffDTO.getDescription(),
-                        employe
-                ));
+        if(!(jourOffDTO.getJour().isBefore(LocalDate.now()) && jourOffDTO.getTypeJour().equals(TypeJour.RTT_EMPLOYEUR))) {
+
+            JoursOff joursOff = new JoursOff(jourOffDTO.getJour(), jourOffDTO.getTypeJour(), jourOffDTO.getDescription());
+
+
+            joursOffService.addJourOff(joursOff);
+            if (joursOff.getTypeJour().equals(TypeJour.RTT_EMPLOYEUR)) {
+
+                for (Employe employe : employeService.listEmployes()) {
+                    absenceService.addAbsence(new Absence(
+                            LocalDateTime.now(),
+                            jourOffDTO.getJour(),
+                            jourOffDTO.getJour(),
+                            Statut.INITIALE,
+                            TypeAbsence.RTT_EMPLOYEUR,
+                            jourOffDTO.getDescription(),
+                            employe
+                    ));
                 }
+            }
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }else{
+              return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        return   ResponseEntity.status(HttpStatus.CREATED).body("jour officiel créé");
     }
 
 
@@ -77,12 +84,18 @@ public class JoursOffControl {
      */
     @PutMapping("/{id}")
     public ResponseEntity<?> changeJourOffDate(@RequestBody JourOffDTO jourOffDTO, @PathVariable("id") int id){
-        JoursOff joursOff1=joursOffService.getJourOffById(id);
-        joursOff1.setJour(jourOffDTO.getJour());
-        joursOff1.setTypeJour(jourOffDTO.getTypeJour());
-        joursOff1.setDescription(jourOffDTO.getDescription());
-        joursOffService.addJourOff(joursOff1);
-        return   ResponseEntity.status(HttpStatus.OK).body("Jour officiel modifié");
+        if(!(jourOffDTO.getJour().isBefore(LocalDate.now())  && jourOffDTO.getTypeJour().equals(TypeJour.RTT_EMPLOYEUR)) ) {
+
+
+            JoursOff joursOff1 = joursOffService.getJourOffById(id);
+            joursOff1.setJour(jourOffDTO.getJour());
+            joursOff1.setTypeJour(jourOffDTO.getTypeJour());
+            joursOff1.setDescription(jourOffDTO.getDescription());
+            joursOffService.addJourOff(joursOff1);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
 
@@ -94,25 +107,31 @@ public class JoursOffControl {
      */
     @RequestMapping(value="/{id}", method={RequestMethod.DELETE, RequestMethod.GET})
 //    @DeleteMapping
-    public ResponseEntity<?> deleteJourOff(@PathVariable("id") int jourOffId){
-        JoursOff joursOff=joursOffService.getJourOffById(jourOffId);
+    public ResponseEntity<?> deleteJourOff(@PathVariable("id") int jourOffId) {
+        JoursOff joursOff = joursOffService.getJourOffById(jourOffId);
 
-        //si un RTT_employeur est supprimé et que les absences etaient validée,
-        //il faut rendre le RTT decompté au salarié
 
-        if(joursOff.getTypeJour().equals(TypeJour.RTT_EMPLOYEUR)){
-         for(Absence absence:  absenceService.getAbsenceByDate(joursOff.getJour())){
-             if(absence.getStatut().equals(Statut.VALIDEE) && absence.getTypeAbsence().equals(TypeAbsence.RTT_EMPLOYEUR)){
-                 Employe employe=absence.getEmploye();
-                 employe.setSoldeRtt(employe.getSoldeRtt()+1);
-             }
+        if (!(joursOff.getJour().isBefore(LocalDate.now()) && joursOff.getTypeJour().equals(TypeJour.RTT_EMPLOYEUR))) {
+
+
+            //si un RTT_employeur est supprimé et que les absences etaient validée,
+            //il faut rendre le RTT decompté au salarié
+
+            if (joursOff.getTypeJour().equals(TypeJour.RTT_EMPLOYEUR)) {
+                for (Absence absence : absenceService.getAbsenceByDate(joursOff.getJour())) {
+                    if (absence.getStatut().equals(Statut.VALIDEE) && absence.getTypeAbsence().equals(TypeAbsence.RTT_EMPLOYEUR)) {
+                        Employe employe = absence.getEmploye();
+                        employe.setSoldeRtt(employe.getSoldeRtt() + 1);
+                    }
+                }
             }
+
+            joursOffService.deleteJourOff(jourOffId);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-
-        joursOffService.deleteJourOff(jourOffId);
-        return   ResponseEntity.status(HttpStatus.OK).build();
     }
-
 
     /**
      * fais appel à l'api du gouvernement pour récuperer les joursferiés officiels.

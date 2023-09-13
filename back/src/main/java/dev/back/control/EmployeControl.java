@@ -36,7 +36,6 @@ public class EmployeControl {
     }
     @GetMapping("active")
     public ResponseEntity<?> listActive(){
-        System.out.println("active");
         Employe activeUser = employeService.getActiveUser();
         Employe employe = new Employe();
         employe.setSoldeRtt(activeUser.getSoldeRtt());
