@@ -254,6 +254,56 @@ public class AbsenceControl {
         Employe employe = absence.getEmploye();
 
         if (authEmploye.getId() == employe.getId()) {
+
+            if (TypeAbsence.CONGE_SANS_SOLDE.equals(absenceDTO.getTypeAbsence())) {
+                if (Objects.equals(absenceDTO.getMotif(), "")) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("le motif est obligatoire pour un congé sans solde ");
+                }
+            }
+
+            List<JoursOff> joursOffList = joursOffService.listJoursOff();
+
+            for (JoursOff joursOff : joursOffList) {
+                if (absence.getDateDebut().isEqual(joursOff.getJour()) || absence.getDateFin().isEqual(joursOff.getJour())) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("la date de debut ou de fin ne peut pas être un jour férié ou un rtt employeur");
+                }
+            }
+
+            if(absenceDTO.getDateDebut().getDayOfWeek() == DayOfWeek.SATURDAY
+                    || absenceDTO.getDateDebut().getDayOfWeek() == DayOfWeek.SUNDAY
+                    ||absenceDTO.getDateFin().getDayOfWeek() == DayOfWeek.SATURDAY
+                    || absenceDTO.getDateFin().getDayOfWeek() == DayOfWeek.SUNDAY ){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("la date de début ou de fin ne peut pas être en weekend ");
+            }
+
+            List<Absence> absenceList = absenceService.listAbsenceByEmploye(absence.getEmploye().getId());
+            boolean superpositionDeDate = false;
+            List<LocalDate> datesDemandes = new ArrayList<>();
+            try {
+                datesDemandes = absenceDTO.getDateDebut().datesUntil(absenceDTO.getDateFin().plusDays(1)).toList();
+            } catch (Exception ex) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("la date de fin ne peut pas être avant celle de début ");
+            }
+
+            for (Absence absenceTempo : absenceList) {
+                List<LocalDate> datesPrises = absenceTempo.getDateDebut().datesUntil(absenceTempo.getDateFin().plusDays(1)).toList();
+                for (LocalDate jour : datesPrises) {
+                    for (LocalDate jourDemande : datesDemandes) {
+
+                        if (jourDemande.equals(jour)) {
+                            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("vous avez déjà une demande de congé sur cette période ");
+
+                        }
+                    }
+                }
+            }
+
+            if (absence.getDateCreation().isAfter(absenceDTO.getDateDebut().atTime(LocalTime.now()))) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("la date de debut ne peut pas être passée ");
+            }
+
+
             absence.setTypeAbsence(absenceDTO.getTypeAbsence());
             absence.setMotif(absenceDTO.getMotif());
             absence.setDateDebut(absenceDTO.getDateDebut());
