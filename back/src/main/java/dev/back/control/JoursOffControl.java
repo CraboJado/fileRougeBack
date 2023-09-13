@@ -121,7 +121,11 @@ public class JoursOffControl {
                 for (Absence absence : absenceService.getAbsenceByDate(joursOff.getJour())) {
                     if (absence.getStatut().equals(Statut.VALIDEE) && absence.getTypeAbsence().equals(TypeAbsence.RTT_EMPLOYEUR)) {
                         Employe employe = absence.getEmploye();
+                        absenceService.deleteAbsence(absence.getId());
                         employe.setSoldeRtt(employe.getSoldeRtt() + 1);
+                    }
+                    if (absence.getStatut().equals(Statut.INITIALE) && absence.getTypeAbsence().equals(TypeAbsence.RTT_EMPLOYEUR)) {
+                        absenceService.deleteAbsence(absence.getId());
                     }
                 }
             }
