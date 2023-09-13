@@ -52,7 +52,7 @@ EmailService emailServiceImpl;
      * un mail est ensuite envoyé au manager pour la validation
      */
 
-    @Scheduled(cron="0 5 16 * * ?")
+    @Scheduled(cron="@midnight")
     public void TraitementDeNuit(){
 
         System.out.println("traitement de nuit : "+LocalDate.now());
