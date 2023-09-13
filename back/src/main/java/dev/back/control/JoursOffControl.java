@@ -70,7 +70,7 @@ public class JoursOffControl {
             }
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }else{
-              return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+              return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Vous ne pouvez pas choisir une date dans le passé !");
         }
     }
 
@@ -94,7 +94,7 @@ public class JoursOffControl {
             joursOffService.addJourOff(joursOff1);
             return ResponseEntity.status(HttpStatus.OK).build();
         }else{
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Vous ne pouvez pas choisir une date dans le passé !");
         }
     }
 
