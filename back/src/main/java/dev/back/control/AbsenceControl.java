@@ -62,6 +62,10 @@ public class AbsenceControl {
     public ResponseEntity<?> addAbsence(@RequestBody AbsenceDTO absenceDTO) throws Exception {
         Employe authEmploye = employeService.getActiveUser();
 
+            if(absenceDTO.getTypeAbsence() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("le type d'absence est obligatoire ");
+            }
+
             if (TypeAbsence.CONGE_SANS_SOLDE.equals(absenceDTO.getTypeAbsence())) {
                 if (Objects.equals(absenceDTO.getMotif(), "")) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("le motif est obligatoire pour un congé sans solde ");
