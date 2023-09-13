@@ -55,7 +55,7 @@ EmailService emailServiceImpl;
     @Scheduled(cron="@midnight")
     public void TraitementDeNuit(){
 
-        System.out.println("traitement de nuit");
+        System.out.println("traitement de nuit : "+LocalDate.now());
 
          List<Absence> absences= absenceService.listAbsences().stream().filter(absence -> absence.getStatut().equals(Statut.INITIALE)).toList();
 

@@ -141,7 +141,7 @@ public class AbsenceControl {
 
     /**
      *
-     * @param managerId
+     * @param manager Id
      * @return liste de tous les employes ayant le même manager d'id donné
      */
     @RequestMapping("/manager")
@@ -200,7 +200,6 @@ public class AbsenceControl {
             Absence absence1 = absenceService.getAbsenceById(absenceIdInt);
 
             int jourtotal = absenceService.nbJourOuvre(absence1);
-            System.out.println(jourtotal);
 
             int nbRttNeeded = 0;
             int nbCongeNeeded = 0;
@@ -216,7 +215,6 @@ public class AbsenceControl {
                 if (absence1.getTypeAbsence().equals(TypeAbsence.CONGE_PAYE)) {
                     nbCongeNeeded = jourtotal;
                 }
-                System.out.println(nbRttNeeded);
                 employe.setSoldeConge(employe.getSoldeConge() + nbCongeNeeded);
                 employe.setSoldeRtt(employe.getSoldeRtt() + nbRttNeeded);
             }

@@ -38,7 +38,6 @@ public class SessionControl {
 
     @PostMapping()
     public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO ){
-        System.out.println(loginDTO.toString());
         return this.employeRepo.findByEmail(loginDTO.getEmail())
                 .filter( employe ->  passwordEncoder.matches(loginDTO.getPassword(), employe.getPassword()))
                 .map( employe -> ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,buildJWTCookie(employe)).build())
