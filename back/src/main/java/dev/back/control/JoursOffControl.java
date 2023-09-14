@@ -31,7 +31,7 @@ public class JoursOffControl {
     }
 
     @GetMapping
-    public List<JoursOff> listAll(){
+    public List<JoursOff> listAll() {
         return joursOffService.listJoursOff();
     }
 
@@ -41,14 +41,19 @@ public class JoursOffControl {
      *
      * @param jourOffDTO
      * @return ResponseEntity
-     *                     created - 201
+     * created - 201
      */
 
 
     @PostMapping()
     public ResponseEntity<?> addJourOff(@RequestBody JourOffDTO jourOffDTO) {
 
-        if(!(jourOffDTO.getJour().isBefore(LocalDate.now()) && jourOffDTO.getTypeJour().equals(TypeJour.RTT_EMPLOYEUR))) {
+        if (jourOffDTO.getJour().getDayOfWeek().getValue() == 6 || jourOffDTO.getJour().getDayOfWeek().getValue() == 0) {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Vous ne pouvez pas choisir un jour de weekend !");
+        }
+
+
+        if (!(jourOffDTO.getJour().isBefore(LocalDate.now()) && jourOffDTO.getTypeJour().equals(TypeJour.RTT_EMPLOYEUR))) {
 
             JoursOff joursOff = new JoursOff(jourOffDTO.getJour(), jourOffDTO.getTypeJour(), jourOffDTO.getDescription());
 
@@ -69,8 +74,8 @@ public class JoursOffControl {
                 }
             }
             return ResponseEntity.status(HttpStatus.CREATED).build();
-        }else{
-              return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Vous ne pouvez pas choisir une date dans le passé !");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Vous ne pouvez pas choisir une date dans le passé !");
         }
     }
 
@@ -80,20 +85,24 @@ public class JoursOffControl {
      *
      * @param joursOff
      * @return ResponseEntity
-     *                  ok - 200
+     * ok - 200
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> changeJourOffDate(@RequestBody JourOffDTO jourOffDTO, @PathVariable("id") int id){
-        if(!(jourOffDTO.getJour().isBefore(LocalDate.now())  && jourOffDTO.getTypeJour().equals(TypeJour.RTT_EMPLOYEUR)) ) {
-
-
-            JoursOff joursOff1 = joursOffService.getJourOffById(id);
-            joursOff1.setJour(jourOffDTO.getJour());
-            joursOff1.setTypeJour(jourOffDTO.getTypeJour());
-            joursOff1.setDescription(jourOffDTO.getDescription());
-            joursOffService.addJourOff(joursOff1);
+    public ResponseEntity<?> changeJourOffDate(@RequestBody JourOffDTO jourOffDTO, @PathVariable("id") int id) {
+        if (!(jourOffDTO.getJour().isBefore(LocalDate.now()) && jourOffDTO.getTypeJour().equals(TypeJour.RTT_EMPLOYEUR))) {
+            for (Absence absence : absenceService.getAbsenceByDate(jourOffDTO.getJour())) {
+                if (absence.getStatut().equals(Statut.VALIDEE)) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Vous ne pouvez pas modifier un RTT Employeur validé !");
+                } else {
+                    JoursOff joursOff1 = joursOffService.getJourOffById(id);
+                    joursOff1.setJour(jourOffDTO.getJour());
+                    joursOff1.setTypeJour(jourOffDTO.getTypeJour());
+                    joursOff1.setDescription(jourOffDTO.getDescription());
+                    joursOffService.addJourOff(joursOff1);
+                }
+            }
             return ResponseEntity.status(HttpStatus.OK).build();
-        }else{
+        } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Vous ne pouvez pas choisir une date dans le passé !");
         }
     }
@@ -105,18 +114,15 @@ public class JoursOffControl {
      * @param jourOffId
      * @return ResponseEntity  ok - 200
      */
-    @RequestMapping(value="/{id}", method={RequestMethod.DELETE, RequestMethod.GET})
+    @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE, RequestMethod.GET})
 //    @DeleteMapping
     public ResponseEntity<?> deleteJourOff(@PathVariable("id") int jourOffId) {
         JoursOff joursOff = joursOffService.getJourOffById(jourOffId);
 
 
         if (!(joursOff.getJour().isBefore(LocalDate.now()) && joursOff.getTypeJour().equals(TypeJour.RTT_EMPLOYEUR))) {
-
-
-            //si un RTT_employeur est supprimé et que les absences etaient validée,
+            //si un RTT_employeur est supprimé et que les absences etaient validées,
             //il faut rendre le RTT decompté au salarié
-
             if (joursOff.getTypeJour().equals(TypeJour.RTT_EMPLOYEUR)) {
                 for (Absence absence : absenceService.getAbsenceByDate(joursOff.getJour())) {
                     if (absence.getStatut().equals(Statut.VALIDEE) && absence.getTypeAbsence().equals(TypeAbsence.RTT_EMPLOYEUR)) {
@@ -129,7 +135,6 @@ public class JoursOffControl {
                     }
                 }
             }
-
             joursOffService.deleteJourOff(jourOffId);
             return ResponseEntity.status(HttpStatus.OK).build();
         } else {
@@ -147,14 +152,14 @@ public class JoursOffControl {
      */
     @PostMapping
     @RequestMapping("/jourferie")
-    public ResponseEntity<?> addJourFerie(){
-        int anneeActuelle=LocalDate.now().getYear();
-        for (int i = anneeActuelle-5; i < anneeActuelle +5 ; i++) {
+    public ResponseEntity<?> addJourFerie() {
+        int anneeActuelle = LocalDate.now().getYear();
+        for (int i = anneeActuelle - 5; i < anneeActuelle + 5; i++) {
             joursOffService.fetchAndSaveJoursFeries(i);
         }
 
 
-        return   ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
 
     }
 
