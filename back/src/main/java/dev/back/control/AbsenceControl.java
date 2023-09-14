@@ -1,6 +1,7 @@
 package dev.back.control;
 
 import dev.back.DTO.AbsenceDTO;
+import dev.back.component.SchedulingComponent;
 import dev.back.entite.*;
 import dev.back.service.AbsenceService;
 import dev.back.service.EmailService;
@@ -28,15 +29,16 @@ public class AbsenceControl {
     JoursOffService joursOffService;
 
     EmailService emailService;
+    SchedulingComponent schedulingComponent;
 
 
-    public AbsenceControl(AbsenceService absenceService, EmployeService employeService, JoursOffService joursOffService, EmailService emailService) {
+    public AbsenceControl(AbsenceService absenceService, EmployeService employeService, JoursOffService joursOffService, EmailService emailService, SchedulingComponent schedulingComponent) {
         this.absenceService = absenceService;
         this.employeService = employeService;
         this.joursOffService = joursOffService;
         this.emailService = emailService;
+        this.schedulingComponent = schedulingComponent;
     }
-
 
     /**
      *
@@ -47,6 +49,15 @@ public class AbsenceControl {
     public List<Absence> listAll(){
         return  absenceService.listAbsences();
     }
+
+
+    @PostMapping("/traitement")
+    public void traitementNuit(){
+        this.schedulingComponent.TraitementDeNuit();
+    }
+
+
+
 
     /**
      * permet de d'ajouter une absence en base de donnée
@@ -207,9 +218,6 @@ public class AbsenceControl {
 
             int nbRttNeeded = 0;
             int nbCongeNeeded = 0;
-
-
-
 
             absence1.setStatut(absence.getStatut());
             if (absence1.getStatut().equals(Statut.REJETEE)) {
