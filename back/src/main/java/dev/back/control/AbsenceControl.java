@@ -296,18 +296,6 @@ public class AbsenceControl {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("la date de fin ne peut pas être avant celle de début ");
             }
 
-            for (Absence absenceTempo : absenceList) {
-                List<LocalDate> datesPrises = absenceTempo.getDateDebut().datesUntil(absenceTempo.getDateFin().plusDays(1)).toList();
-                for (LocalDate jour : datesPrises) {
-                    for (LocalDate jourDemande : datesDemandes) {
-
-                        if (jourDemande.equals(jour)) {
-                            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("vous avez déjà une demande de congé sur cette période ");
-
-                        }
-                    }
-                }
-            }
 
             if (absence.getDateCreation().isAfter(absenceDTO.getDateDebut().atTime(LocalTime.now()))) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("la date de debut ne peut pas être passée ");
@@ -355,6 +343,8 @@ public class AbsenceControl {
                 }
 
             }
+
+            employeService.addEmploye(employe);
 
             absenceService.deleteAbsence(Integer.parseInt(absenceId));
             return ResponseEntity.status(HttpStatus.OK).build();
