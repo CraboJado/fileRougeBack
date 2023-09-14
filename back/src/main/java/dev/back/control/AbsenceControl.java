@@ -263,7 +263,7 @@ public class AbsenceControl {
         Employe authEmploye = employeService.getActiveUser();
         Employe employe = absence.getEmploye();
 
-        if (absence.getDateDebut().isBefore(LocalDate.now())) {
+        if (!absence.getDateDebut().isBefore(LocalDate.now())) {
 
             if (authEmploye.getId() == employe.getId()) {
 
@@ -338,7 +338,7 @@ public class AbsenceControl {
         Employe authEmploye = employeService.getActiveUser();
         Absence absence = absenceService.getAbsenceById(Integer.parseInt(absenceId));
         Employe employe = absence.getEmploye();
-        if (absence.getDateDebut().isBefore(LocalDate.now())) {
+        if (!absence.getDateDebut().isBefore(LocalDate.now())) {
             if (authEmploye.getId() == employe.getId()) {
 
                 int jourTotal = absenceService.nbJourOuvre(absenceService.getAbsenceById(Integer.parseInt(absenceId)));
