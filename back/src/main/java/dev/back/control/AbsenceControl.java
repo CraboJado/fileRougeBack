@@ -191,13 +191,13 @@ public class AbsenceControl {
     @PutMapping("/statut/{id}")
     public ResponseEntity<?> ChangeAbsenceStatut(@RequestBody AbsenceDTO absence, @PathVariable("id") String id) {
 
-        Employe authEmploye = employeService.getActiveUser();
+        Employe authManager = employeService.getActiveUser();
         Employe employe = employeService.getEmployeById(absence.getEmployeId());
 
         int authManagerId=0;
         int managerId=0;
         try{
-         authManagerId=authEmploye.getManager().getId();
+         authManagerId=authManager.getId();
          managerId=employe.getManager().getId();
 
         }catch (Exception exception){
@@ -263,6 +263,7 @@ public class AbsenceControl {
         Employe authEmploye = employeService.getActiveUser();
         Employe employe = absence.getEmploye();
 
+
         if (!absence.getDateDebut().isBefore(LocalDate.now())) {
 
             if (authEmploye.getId() == employe.getId()) {
@@ -321,9 +322,6 @@ public class AbsenceControl {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("vous ne pouvez pas modifier une absence passée");
         }
     }
-
-
-
     /**supprime une absence,
      * seul l'employé connecté peut supprimer ses absences
      *
@@ -344,16 +342,14 @@ public class AbsenceControl {
                 int jourTotal = absenceService.nbJourOuvre(absenceService.getAbsenceById(Integer.parseInt(absenceId)));
                 if (absence.getStatut().equals(Statut.VALIDEE) || absence.getStatut().equals(Statut.EN_ATTENTE)) {
                     if (absence.getTypeAbsence().equals(TypeAbsence.RTT)) {
+                        System.out.println(jourTotal+"absenceRTT  "+absence.getStatut() );
                         employe.setSoldeRtt(employe.getSoldeRtt() + jourTotal);
                     }
                     if (absence.getTypeAbsence().equals(TypeAbsence.CONGE_PAYE)) {
                         employe.setSoldeConge(employe.getSoldeConge() + jourTotal);
                     }
-
                 }
-
                 employeService.addEmploye(employe);
-
                 absenceService.deleteAbsence(Integer.parseInt(absenceId));
                 return ResponseEntity.status(HttpStatus.OK).build();
             } else {
